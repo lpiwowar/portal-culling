@@ -1,0 +1,21 @@
+# Hashes of file build rules.
+75bf01feafdd2cc16a12972d0359c427 CMakeFiles/run
+1914b9cee52c3c14e22241c66f4396bf sdl2_build/CMakeFiles/uninstall
+e1b866906ce37034edcf480dae4cd2f2 sdl2_build/wayland-generated-protocols/idle-inhibit-unstable-v1-client-protocol.h
+6b2ba684aff767f3f5728e9aead3d073 sdl2_build/wayland-generated-protocols/idle-inhibit-unstable-v1-protocol.c
+43b8b981123518affaf483d84facc7e3 sdl2_build/wayland-generated-protocols/keyboard-shortcuts-inhibit-unstable-v1-client-protocol.h
+38e80f12019c4fc7f18e5139ba03cc4c sdl2_build/wayland-generated-protocols/keyboard-shortcuts-inhibit-unstable-v1-protocol.c
+429140da121c7724a56ae4dbc7b75e84 sdl2_build/wayland-generated-protocols/pointer-constraints-unstable-v1-client-protocol.h
+33b5dd774b044afe834af738cb2a943a sdl2_build/wayland-generated-protocols/pointer-constraints-unstable-v1-protocol.c
+75f1b2db8e6fa33876943d3f426add47 sdl2_build/wayland-generated-protocols/relative-pointer-unstable-v1-client-protocol.h
+9dc59f122945dde1015c996e6123fc20 sdl2_build/wayland-generated-protocols/relative-pointer-unstable-v1-protocol.c
+1f4b46fc035aefe4fe2088c6afb45f23 sdl2_build/wayland-generated-protocols/text-input-unstable-v3-client-protocol.h
+3a861a1de3fe0bd3de8c1918de963b20 sdl2_build/wayland-generated-protocols/text-input-unstable-v3-protocol.c
+1df4a35dc9f1e5a0b080af9f62a66022 sdl2_build/wayland-generated-protocols/wayland-client-protocol.h
+1efe5409a99f7568478b964bf83d66d3 sdl2_build/wayland-generated-protocols/wayland-protocol.c
+e7f527d99e426f712e50e1b84e3ae3ea sdl2_build/wayland-generated-protocols/xdg-activation-v1-client-protocol.h
+80abb3bd9fab13455e5b44fe852c0525 sdl2_build/wayland-generated-protocols/xdg-activation-v1-protocol.c
+b69bf66921aabeee540c55d82a445c28 sdl2_build/wayland-generated-protocols/xdg-decoration-unstable-v1-client-protocol.h
+dc98c57d889c61f424b7e63edbcfc553 sdl2_build/wayland-generated-protocols/xdg-decoration-unstable-v1-protocol.c
+8a8a9f557f3fdf2b46071725a73b17c5 sdl2_build/wayland-generated-protocols/xdg-shell-client-protocol.h
+17ad0929ac0af0829a2fd91df1d6bfb2 sdl2_build/wayland-generated-protocols/xdg-shell-protocol.c

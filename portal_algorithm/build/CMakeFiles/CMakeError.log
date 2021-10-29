@@ -1,0 +1,1181 @@
+Performing C SOURCE FILE Test HAVE_GCC_PREFERRED_STACK_BOUNDARY failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_f0cac/fast && /usr/bin/make  -f CMakeFiles/cmTC_f0cac.dir/build.make CMakeFiles/cmTC_f0cac.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_f0cac.dir/src.c.o
+/usr/bin/cc -DHAVE_GCC_PREFERRED_STACK_BOUNDARY  -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos" -mpreferred-stack-boundary=2 -o CMakeFiles/cmTC_f0cac.dir/src.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c
+cc1: error: ‘-mpreferred-stack-boundary=2’ is not between 3 and 12
+make[1]: *** [CMakeFiles/cmTC_f0cac.dir/build.make:78: CMakeFiles/cmTC_f0cac.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_f0cac/fast] Error 2
+
+
+Source file was:
+int x = 0; int main(int argc, char **argv) {}
+Performing C SOURCE FILE Test HAVE_ALTIVEC_H_HDR failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_52cb8/fast && /usr/bin/make  -f CMakeFiles/cmTC_52cb8.dir/build.make CMakeFiles/cmTC_52cb8.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_52cb8.dir/src.c.o
+/usr/bin/cc -DHAVE_ALTIVEC_H_HDR  -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos" -maltivec -o CMakeFiles/cmTC_52cb8.dir/src.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c
+cc: error: unrecognized command-line option ‘-maltivec’
+make[1]: *** [CMakeFiles/cmTC_52cb8.dir/build.make:78: CMakeFiles/cmTC_52cb8.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_52cb8/fast] Error 2
+
+
+Source file was:
+
+          #include <altivec.h>
+          vector unsigned int vzero() {
+              return vec_splat_u32(0);
+          }
+          int main(int argc, char **argv) { }
+Performing C SOURCE FILE Test HAVE_ALTIVEC failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_b2816/fast && /usr/bin/make  -f CMakeFiles/cmTC_b2816.dir/build.make CMakeFiles/cmTC_b2816.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b2816.dir/src.c.o
+/usr/bin/cc -DHAVE_ALTIVEC  -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos" -maltivec -o CMakeFiles/cmTC_b2816.dir/src.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c
+cc: error: unrecognized command-line option ‘-maltivec’
+make[1]: *** [CMakeFiles/cmTC_b2816.dir/build.make:78: CMakeFiles/cmTC_b2816.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_b2816/fast] Error 2
+
+
+Source file was:
+
+          vector unsigned int vzero() {
+              return vec_splat_u32(0);
+          }
+          int main(int argc, char **argv) { }
+Determining if the strlcpy exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_309ef/fast && /usr/bin/make  -f CMakeFiles/cmTC_309ef.dir/build.make CMakeFiles/cmTC_309ef.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_309ef.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_309ef.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘strlcpy’ undeclared (first use in this function); did you mean ‘strncpy’?
+   14 |   return ((int*)(&strlcpy))[argc];
+      |                   ^~~~~~~
+      |                   strncpy
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_309ef.dir/build.make:78: CMakeFiles/cmTC_309ef.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_309ef/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef strlcpy
+  return ((int*)(&strlcpy))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the strlcat exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_c612f/fast && /usr/bin/make  -f CMakeFiles/cmTC_c612f.dir/build.make CMakeFiles/cmTC_c612f.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c612f.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_c612f.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘strlcat’ undeclared (first use in this function); did you mean ‘strncat’?
+   14 |   return ((int*)(&strlcat))[argc];
+      |                   ^~~~~~~
+      |                   strncat
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_c612f.dir/build.make:78: CMakeFiles/cmTC_c612f.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_c612f/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef strlcat
+  return ((int*)(&strlcat))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _strrev exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_c92f6/fast && /usr/bin/make  -f CMakeFiles/cmTC_c92f6.dir/build.make CMakeFiles/cmTC_c92f6.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c92f6.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_c92f6.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_strrev’ undeclared (first use in this function)
+   14 |   return ((int*)(&_strrev))[argc];
+      |                   ^~~~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_c92f6.dir/build.make:78: CMakeFiles/cmTC_c92f6.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_c92f6/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _strrev
+  return ((int*)(&_strrev))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _strupr exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_672ea/fast && /usr/bin/make  -f CMakeFiles/cmTC_672ea.dir/build.make CMakeFiles/cmTC_672ea.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_672ea.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_672ea.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_strupr’ undeclared (first use in this function)
+   14 |   return ((int*)(&_strupr))[argc];
+      |                   ^~~~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_672ea.dir/build.make:78: CMakeFiles/cmTC_672ea.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_672ea/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _strupr
+  return ((int*)(&_strupr))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _strlwr exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_b52f4/fast && /usr/bin/make  -f CMakeFiles/cmTC_b52f4.dir/build.make CMakeFiles/cmTC_b52f4.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b52f4.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_b52f4.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_strlwr’ undeclared (first use in this function)
+   14 |   return ((int*)(&_strlwr))[argc];
+      |                   ^~~~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_b52f4.dir/build.make:78: CMakeFiles/cmTC_b52f4.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_b52f4/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _strlwr
+  return ((int*)(&_strlwr))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the itoa exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_3c222/fast && /usr/bin/make  -f CMakeFiles/cmTC_3c222.dir/build.make CMakeFiles/cmTC_3c222.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3c222.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_3c222.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘itoa’ undeclared (first use in this function)
+   14 |   return ((int*)(&itoa))[argc];
+      |                   ^~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_3c222.dir/build.make:78: CMakeFiles/cmTC_3c222.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_3c222/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef itoa
+  return ((int*)(&itoa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _ltoa exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_c46f1/fast && /usr/bin/make  -f CMakeFiles/cmTC_c46f1.dir/build.make CMakeFiles/cmTC_c46f1.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c46f1.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_c46f1.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_ltoa’ undeclared (first use in this function)
+   14 |   return ((int*)(&_ltoa))[argc];
+      |                   ^~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_c46f1.dir/build.make:78: CMakeFiles/cmTC_c46f1.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_c46f1/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _ltoa
+  return ((int*)(&_ltoa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _uitoa exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_b6448/fast && /usr/bin/make  -f CMakeFiles/cmTC_b6448.dir/build.make CMakeFiles/cmTC_b6448.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_b6448.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_b6448.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_uitoa’ undeclared (first use in this function)
+   14 |   return ((int*)(&_uitoa))[argc];
+      |                   ^~~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_b6448.dir/build.make:78: CMakeFiles/cmTC_b6448.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_b6448/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _uitoa
+  return ((int*)(&_uitoa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _ultoa exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_c664a/fast && /usr/bin/make  -f CMakeFiles/cmTC_c664a.dir/build.make CMakeFiles/cmTC_c664a.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c664a.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_c664a.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_ultoa’ undeclared (first use in this function)
+   14 |   return ((int*)(&_ultoa))[argc];
+      |                   ^~~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_c664a.dir/build.make:78: CMakeFiles/cmTC_c664a.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_c664a/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _ultoa
+  return ((int*)(&_ultoa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _i64toa exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_d7e67/fast && /usr/bin/make  -f CMakeFiles/cmTC_d7e67.dir/build.make CMakeFiles/cmTC_d7e67.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d7e67.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_d7e67.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_i64toa’ undeclared (first use in this function)
+   14 |   return ((int*)(&_i64toa))[argc];
+      |                   ^~~~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_d7e67.dir/build.make:78: CMakeFiles/cmTC_d7e67.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_d7e67/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _i64toa
+  return ((int*)(&_i64toa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _ui64toa exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_17ecf/fast && /usr/bin/make  -f CMakeFiles/cmTC_17ecf.dir/build.make CMakeFiles/cmTC_17ecf.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_17ecf.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_17ecf.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_ui64toa’ undeclared (first use in this function)
+   14 |   return ((int*)(&_ui64toa))[argc];
+      |                   ^~~~~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_17ecf.dir/build.make:78: CMakeFiles/cmTC_17ecf.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_17ecf/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _ui64toa
+  return ((int*)(&_ui64toa))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _stricmp exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_30daa/fast && /usr/bin/make  -f CMakeFiles/cmTC_30daa.dir/build.make CMakeFiles/cmTC_30daa.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_30daa.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_30daa.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_stricmp’ undeclared (first use in this function); did you mean ‘strncmp’?
+   14 |   return ((int*)(&_stricmp))[argc];
+      |                   ^~~~~~~~
+      |                   strncmp
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_30daa.dir/build.make:78: CMakeFiles/cmTC_30daa.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_30daa/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _stricmp
+  return ((int*)(&_stricmp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _strnicmp exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_bd11a/fast && /usr/bin/make  -f CMakeFiles/cmTC_bd11a.dir/build.make CMakeFiles/cmTC_bd11a.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_bd11a.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_bd11a.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_strnicmp’ undeclared (first use in this function); did you mean ‘strncmp’?
+   14 |   return ((int*)(&_strnicmp))[argc];
+      |                   ^~~~~~~~~
+      |                   strncmp
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_bd11a.dir/build.make:78: CMakeFiles/cmTC_bd11a.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_bd11a/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _strnicmp
+  return ((int*)(&_strnicmp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _wcsdup exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_6e6da/fast && /usr/bin/make  -f CMakeFiles/cmTC_6e6da.dir/build.make CMakeFiles/cmTC_6e6da.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6e6da.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_6e6da.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_wcsdup’ undeclared (first use in this function); did you mean ‘wcsdup’?
+   14 |   return ((int*)(&_wcsdup))[argc];
+      |                   ^~~~~~~
+      |                   wcsdup
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_6e6da.dir/build.make:78: CMakeFiles/cmTC_6e6da.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_6e6da/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _wcsdup
+  return ((int*)(&_wcsdup))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the wcslcat exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_726a2/fast && /usr/bin/make  -f CMakeFiles/cmTC_726a2.dir/build.make CMakeFiles/cmTC_726a2.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_726a2.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_726a2.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘wcslcat’ undeclared (first use in this function); did you mean ‘wcsncat’?
+   14 |   return ((int*)(&wcslcat))[argc];
+      |                   ^~~~~~~
+      |                   wcsncat
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_726a2.dir/build.make:78: CMakeFiles/cmTC_726a2.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_726a2/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef wcslcat
+  return ((int*)(&wcslcat))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the wcslcpy exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_1b452/fast && /usr/bin/make  -f CMakeFiles/cmTC_1b452.dir/build.make CMakeFiles/cmTC_1b452.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1b452.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_1b452.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘wcslcpy’ undeclared (first use in this function); did you mean ‘wcsncpy’?
+   14 |   return ((int*)(&wcslcpy))[argc];
+      |                   ^~~~~~~
+      |                   wcsncpy
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_1b452.dir/build.make:78: CMakeFiles/cmTC_1b452.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_1b452/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef wcslcpy
+  return ((int*)(&wcslcpy))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _wcsicmp exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_0f71c/fast && /usr/bin/make  -f CMakeFiles/cmTC_0f71c.dir/build.make CMakeFiles/cmTC_0f71c.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_0f71c.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_0f71c.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_wcsicmp’ undeclared (first use in this function); did you mean ‘wcsncmp’?
+   14 |   return ((int*)(&_wcsicmp))[argc];
+      |                   ^~~~~~~~
+      |                   wcsncmp
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_0f71c.dir/build.make:78: CMakeFiles/cmTC_0f71c.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_0f71c/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _wcsicmp
+  return ((int*)(&_wcsicmp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _wcsnicmp exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_7e1b9/fast && /usr/bin/make  -f CMakeFiles/cmTC_7e1b9.dir/build.make CMakeFiles/cmTC_7e1b9.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7e1b9.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_7e1b9.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘_wcsnicmp’ undeclared (first use in this function); did you mean ‘wcsncmp’?
+   14 |   return ((int*)(&_wcsnicmp))[argc];
+      |                   ^~~~~~~~~
+      |                   wcsncmp
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_7e1b9.dir/build.make:78: CMakeFiles/cmTC_7e1b9.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_7e1b9/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _wcsnicmp
+  return ((int*)(&_wcsnicmp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the fopen64 exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_d96e8/fast && /usr/bin/make  -f CMakeFiles/cmTC_d96e8.dir/build.make CMakeFiles/cmTC_d96e8.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_d96e8.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_d96e8.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘fopen64’ undeclared (first use in this function); did you mean ‘fopen’?
+   14 |   return ((int*)(&fopen64))[argc];
+      |                   ^~~~~~~
+      |                   fopen
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_d96e8.dir/build.make:78: CMakeFiles/cmTC_d96e8.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_d96e8/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef fopen64
+  return ((int*)(&fopen64))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the fseeko64 exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_67c9e/fast && /usr/bin/make  -f CMakeFiles/cmTC_67c9e.dir/build.make CMakeFiles/cmTC_67c9e.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_67c9e.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_67c9e.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: error: ‘fseeko64’ undeclared (first use in this function); did you mean ‘fseeko’?
+   14 |   return ((int*)(&fseeko64))[argc];
+      |                   ^~~~~~~~
+      |                   fseeko
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:14:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_67c9e.dir/build.make:78: CMakeFiles/cmTC_67c9e.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_67c9e/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stddef.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <wchar.h>
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef fseeko64
+  return ((int*)(&fseeko64))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the sysctlbyname exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_baa91/fast && /usr/bin/make  -f CMakeFiles/cmTC_baa91.dir/build.make CMakeFiles/cmTC_baa91.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_baa91.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_baa91.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:3:10: fatal error: sys/sysctl.h: No such file or directory
+    3 | #include <sys/sysctl.h>
+      |          ^~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_baa91.dir/build.make:78: CMakeFiles/cmTC_baa91.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_baa91/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef sysctlbyname
+  return ((int*)(&sysctlbyname))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the elf_aux_info exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_1597b/fast && /usr/bin/make  -f CMakeFiles/cmTC_1597b.dir/build.make CMakeFiles/cmTC_1597b.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1597b.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_1597b.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: ‘elf_aux_info’ undeclared (first use in this function)
+    8 |   return ((int*)(&elf_aux_info))[argc];
+      |                   ^~~~~~~~~~~~
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_1597b.dir/build.make:78: CMakeFiles/cmTC_1597b.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_1597b/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <sys/auxv.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef elf_aux_info
+  return ((int*)(&elf_aux_info))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the function iconv_open exists in the iconv failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_042ee/fast && /usr/bin/make  -f CMakeFiles/cmTC_042ee.dir/build.make CMakeFiles/cmTC_042ee.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_042ee.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos" -DCHECK_FUNCTION_EXISTS=iconv_open -o CMakeFiles/cmTC_042ee.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.21/Modules/CheckFunctionExists.c
+Linking C executable cmTC_042ee
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_042ee.dir/link.txt --verbose=1
+/usr/bin/cc -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos" -DCHECK_FUNCTION_EXISTS=iconv_open -rdynamic CMakeFiles/cmTC_042ee.dir/CheckFunctionExists.c.o -o cmTC_042ee  -liconv 
+/usr/bin/ld: cannot find -liconv
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_042ee.dir/build.make:99: cmTC_042ee] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_042ee/fast] Error 2
+
+
+
+Determining if the alloca exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_1d2f8/fast && /usr/bin/make  -f CMakeFiles/cmTC_1d2f8.dir/build.make CMakeFiles/cmTC_1d2f8.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1d2f8.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_1d2f8.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: ‘alloca’ undeclared (first use in this function); did you mean ‘valloc’?
+    8 |   return ((int*)(&alloca))[argc];
+      |                   ^~~~~~
+      |                   valloc
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_1d2f8.dir/build.make:78: CMakeFiles/cmTC_1d2f8.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_1d2f8/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <malloc.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef alloca
+  return ((int*)(&alloca))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the dlopen exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_79d79/fast && /usr/bin/make  -f CMakeFiles/cmTC_79d79.dir/build.make CMakeFiles/cmTC_79d79.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_79d79.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_79d79.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_79d79
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_79d79.dir/link.txt --verbose=1
+/usr/bin/cc -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -rdynamic CMakeFiles/cmTC_79d79.dir/CheckSymbolExists.c.o -o cmTC_79d79 
+/usr/bin/ld: CMakeFiles/cmTC_79d79.dir/CheckSymbolExists.c.o: in function `main':
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8: undefined reference to `dlopen'
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_79d79.dir/build.make:99: cmTC_79d79] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_79d79/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <dlfcn.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef dlopen
+  return ((int*)(&dlopen))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the include file audio/audiolib.h exists failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_8f1db/fast && /usr/bin/make  -f CMakeFiles/cmTC_8f1db.dir/build.make CMakeFiles/cmTC_8f1db.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_8f1db.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_8f1db.dir/CheckIncludeFile.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: audio/audiolib.h: No such file or directory
+    1 | #include <audio/audiolib.h>
+      |          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_8f1db.dir/build.make:78: CMakeFiles/cmTC_8f1db.dir/CheckIncludeFile.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_8f1db/fast] Error 2
+
+
+
+Determining if the include file sndio.h exists failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_1cd8e/fast && /usr/bin/make  -f CMakeFiles/cmTC_1cd8e.dir/build.make CMakeFiles/cmTC_1cd8e.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1cd8e.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -o CMakeFiles/cmTC_1cd8e.dir/CheckIncludeFile.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:10: fatal error: sndio.h: No such file or directory
+    1 | #include <sndio.h>
+      |          ^~~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_1cd8e.dir/build.make:78: CMakeFiles/cmTC_1cd8e.dir/CheckIncludeFile.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_1cd8e/fast] Error 2
+
+
+
+Performing C SOURCE FILE Test HAVE_VIDEO_RPI failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_eea93/fast && /usr/bin/make  -f CMakeFiles/cmTC_eea93.dir/build.make CMakeFiles/cmTC_eea93.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_eea93.dir/src.c.o
+/usr/bin/cc -DHAVE_VIDEO_RPI  -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"  -I/opt/vc/include/interface/vmcs_host/linux/ -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include  -L/opt/vc/lib -o CMakeFiles/cmTC_eea93.dir/src.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c:2:18: fatal error: bcm_host.h: No such file or directory
+    2 |         #include <bcm_host.h>
+      |                  ^~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_eea93.dir/build.make:78: CMakeFiles/cmTC_eea93.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_eea93/fast] Error 2
+
+
+Source file was:
+
+        #include <bcm_host.h>
+        int main(int argc, char **argv) {}
+Performing C SOURCE FILE Test HAVE_VIDEO_OPENGLES_V1 failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_292e3/fast && /usr/bin/make  -f CMakeFiles/cmTC_292e3.dir/build.make CMakeFiles/cmTC_292e3.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_292e3.dir/src.c.o
+/usr/bin/cc -DHAVE_VIDEO_OPENGLES_V1  -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"   -o CMakeFiles/cmTC_292e3.dir/src.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c:2:18: fatal error: GLES/gl.h: No such file or directory
+    2 |         #include <GLES/gl.h>
+      |                  ^~~~~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_292e3.dir/build.make:78: CMakeFiles/cmTC_292e3.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_292e3/fast] Error 2
+
+
+Source file was:
+
+        #include <GLES/gl.h>
+        #include <GLES/glext.h>
+        int main (int argc, char** argv) {}
+Performing C SOURCE FILE Test HAVE_VIDEO_VIVANTE_VDK failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_09a46/fast && /usr/bin/make  -f CMakeFiles/cmTC_09a46.dir/build.make CMakeFiles/cmTC_09a46.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_09a46.dir/src.c.o
+/usr/bin/cc -DHAVE_VIDEO_VIVANTE_VDK  -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"   -o CMakeFiles/cmTC_09a46.dir/src.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c:2:18: fatal error: gc_vdk.h: No such file or directory
+    2 |         #include <gc_vdk.h>
+      |                  ^~~~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_09a46.dir/build.make:78: CMakeFiles/cmTC_09a46.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_09a46/fast] Error 2
+
+
+Source file was:
+
+        #include <gc_vdk.h>
+        int main(int argc, char** argv) {}
+Performing C SOURCE FILE Test HAVE_VIDEO_VIVANTE_EGL_FB failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_22dff/fast && /usr/bin/make  -f CMakeFiles/cmTC_22dff.dir/build.make CMakeFiles/cmTC_22dff.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_22dff.dir/src.c.o
+/usr/bin/cc -DHAVE_VIDEO_VIVANTE_EGL_FB  -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"   -o CMakeFiles/cmTC_22dff.dir/src.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c:4:18: fatal error: EGL/eglvivante.h: No such file or directory
+    4 |         #include <EGL/eglvivante.h>
+      |                  ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_22dff.dir/build.make:78: CMakeFiles/cmTC_22dff.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_22dff/fast] Error 2
+
+
+Source file was:
+
+        #define LINUX
+        #define EGL_API_FB
+        #include <EGL/eglvivante.h>
+        int main(int argc, char** argv) {}
+Determining if files pthread_np.h exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_6eb1a/fast && /usr/bin/make  -f CMakeFiles/cmTC_6eb1a.dir/build.make CMakeFiles/cmTC_6eb1a.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_6eb1a.dir/HAVE_PTHREAD_NP_H.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"   -D_REENTRANT -pthread -o CMakeFiles/cmTC_6eb1a.dir/HAVE_PTHREAD_NP_H.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CheckIncludeFiles/HAVE_PTHREAD_NP_H.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CheckIncludeFiles/HAVE_PTHREAD_NP_H.c:2:10: fatal error: pthread_np.h: No such file or directory
+    2 | #include <pthread_np.h>
+      |          ^~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTC_6eb1a.dir/build.make:78: CMakeFiles/cmTC_6eb1a.dir/HAVE_PTHREAD_NP_H.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_6eb1a/fast] Error 2
+
+
+Source:
+/* */
+#include <pthread_np.h>
+
+
+int main(void){return 0;}
+
+Determining if the pthread_setname_np exist failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_a015b/fast && /usr/bin/make  -f CMakeFiles/cmTC_a015b.dir/build.make CMakeFiles/cmTC_a015b.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a015b.dir/CheckSymbolExists.c.o
+/usr/bin/cc   -g -O3 -idirafter "/home/lpiwowar/school/school-pgr/libs/SDL2-2.0.16/src/video/khronos"   -D_REENTRANT -pthread -o CMakeFiles/cmTC_a015b.dir/CheckSymbolExists.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c: In function ‘main’:
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: ‘pthread_setname_np’ undeclared (first use in this function); did you mean ‘pthread_setcanceltype’?
+    8 |   return ((int*)(&pthread_setname_np))[argc];
+      |                   ^~~~~~~~~~~~~~~~~~
+      |                   pthread_setcanceltype
+/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: note: each undeclared identifier is reported only once for each function it appears in
+make[1]: *** [CMakeFiles/cmTC_a015b.dir/build.make:78: CMakeFiles/cmTC_a015b.dir/CheckSymbolExists.c.o] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_a015b/fast] Error 2
+
+
+File /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_setname_np
+  return ((int*)(&pthread_setname_np))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_2b9c3/fast && /usr/bin/make  -f CMakeFiles/cmTC_2b9c3.dir/build.make CMakeFiles/cmTC_2b9c3.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2b9c3.dir/src.c.o
+/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_2b9c3.dir/src.c.o -c /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_2b9c3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2b9c3.dir/link.txt --verbose=1
+/usr/bin/cc -rdynamic CMakeFiles/cmTC_2b9c3.dir/src.c.o -o cmTC_2b9c3 
+/usr/bin/ld: CMakeFiles/cmTC_2b9c3.dir/src.c.o: in function `main':
+src.c:(.text+0x3e): undefined reference to `pthread_create'
+/usr/bin/ld: src.c:(.text+0x4a): undefined reference to `pthread_detach'
+/usr/bin/ld: src.c:(.text+0x56): undefined reference to `pthread_cancel'
+/usr/bin/ld: src.c:(.text+0x67): undefined reference to `pthread_join'
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_2b9c3.dir/build.make:99: cmTC_2b9c3] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_2b9c3/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_26bd6/fast && /usr/bin/make  -f CMakeFiles/cmTC_26bd6.dir/build.make CMakeFiles/cmTC_26bd6.dir/build
+make[1]: Entering directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_26bd6.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_26bd6.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.21/Modules/CheckFunctionExists.c
+Linking C executable cmTC_26bd6
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_26bd6.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create -rdynamic CMakeFiles/cmTC_26bd6.dir/CheckFunctionExists.c.o -o cmTC_26bd6  -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_26bd6.dir/build.make:99: cmTC_26bd6] Error 1
+make[1]: Leaving directory '/home/lpiwowar/school/school-pgr/portal_algorithm/build/CMakeFiles/CMakeTmp'
+make: *** [Makefile:127: cmTC_26bd6/fast] Error 2
+
+
+

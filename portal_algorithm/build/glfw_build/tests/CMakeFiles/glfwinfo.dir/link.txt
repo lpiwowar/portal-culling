@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/glfwinfo.dir/glfwinfo.c.o CMakeFiles/glfwinfo.dir/home/lpiwowar/school/school-pgr/libs/glfw-3.1.2/deps/getopt.c.o -o glfwinfo  ../src/libglfw3.a -lrt -lm -lX11 -lpthread -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor -lGL -ldl 

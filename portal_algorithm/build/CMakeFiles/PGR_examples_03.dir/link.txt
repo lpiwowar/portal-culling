@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/PGR_examples_03.dir/src/main.cpp.o CMakeFiles/PGR_examples_03.dir/src/common/shader.cpp.o CMakeFiles/PGR_examples_03.dir/src/common/objloader.cpp.o -o PGR_examples_03  sdl2_build/libSDL2.a sdl2_build/libSDL2main.a gegl_build/libgeGL.a -lm -ldl -ldbus-1 -libus-1.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lunwind -lunwind-generic -Wl,--no-undefined -pthread 

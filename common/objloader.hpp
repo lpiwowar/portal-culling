@@ -10,6 +10,8 @@ typedef struct {
 	GLuint vertexbuffer;
 	GLuint uvbuffer;
 	GLuint normalbuffer; 
+    glm::vec3 bounding_box_min;
+    glm::vec3 bounding_box_max;
 } Object_T;
 
 bool loadOBJ(

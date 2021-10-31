@@ -22,7 +22,7 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 
-/*
+
 void calcBoundingBox(Object_T * object) {
     glm::vec3 min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
     glm::vec3 max = glm::vec3(FLT_MIN, FLT_MIN, FLT_MIN);
@@ -41,9 +41,8 @@ void calcBoundingBox(Object_T * object) {
 
     return;
 }
-*/
 
-void fillobjectbuffers(Object_T * object) {
+void fillObjectBuffers(Object_T * object) {
     glGenBuffers(1, &object->vertexbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, object->vertices.size() * sizeof(glm::vec3), &object->vertices[0], GL_STATIC_DRAW);
@@ -59,7 +58,7 @@ void fillobjectbuffers(Object_T * object) {
     return;
 }
 
-void drawobject(Object_T * object) {
+void drawObject(Object_T * object) {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
@@ -85,7 +84,7 @@ void drawobject(Object_T * object) {
     return;
 }
 
-void useprogram(std::string shader_name, GLuint programid) {
+void useProgram(std::string shader_name, GLuint programid) {
     if (shader_name == "room") {
 	    glUseProgram(programid);
 
@@ -197,15 +196,20 @@ int main( void )
 	// read our .obj file
 	Object_T room_1;
 	bool res1 = loadOBJ("./scene/simple_scene_room_1.obj", &room_1);
-	fillobjectbuffers(&room_1);
+	fillObjectBuffers(&room_1);
+    calcBoundingBox(&room_1);
+    std::cout << "box_min.x: " << room_1.bounding_box_min.x << " box_min.y: " << room_1.bounding_box_min.y << " box_min.z: " << room_1.bounding_box_min.z << std::endl;
+    std::cout << "box_max.x: " << room_1.bounding_box_max.x << " box_max.y: " << room_1.bounding_box_max.y << " box_max.z: " << room_1.bounding_box_max.z << std::endl;
 
 	Object_T room_2;
 	bool res2 = loadOBJ("./scene/simple_scene_room_2.obj", &room_2);
-	fillobjectbuffers(&room_2);
-	
+	fillObjectBuffers(&room_2);
+    calcBoundingBox(&room_2);
+
 	Object_T portal_1;
 	bool res3 = loadOBJ("./scene/portal.obj", &portal_1);
-	fillobjectbuffers(&portal_1);
+	fillObjectBuffers(&portal_1);
+    calcBoundingBox(&portal_1);
     
     bool wireframe = false;
 	do{
@@ -223,15 +227,15 @@ int main( void )
           wireframe = false;
 		}
 
-		useprogram("room", room_programID);
-		drawobject(&room_1);
-		drawobject(&room_2);
+		useProgram("room", room_programID);
+		drawObject(&room_1);
+		drawObject(&room_2);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		useprogram("portal", portal_programID);
-		drawobject(&portal_1);
+		useProgram("portal", portal_programID);
+		drawObject(&portal_1);
 
         if (!wireframe)
             glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );

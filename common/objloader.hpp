@@ -1,11 +1,20 @@
 #ifndef OBJLOADER_H
 #define OBJLOADER_H
 
+#include <GL/gl.h>
+
+typedef struct {
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> uvs;
+	std::vector<glm::vec3> normals;
+	GLuint vertexbuffer;
+	GLuint uvbuffer;
+	GLuint normalbuffer; 
+} Object_T;
+
 bool loadOBJ(
 	const char * path, 
-	std::vector<glm::vec3> & out_vertices, 
-	std::vector<glm::vec2> & out_uvs, 
-	std::vector<glm::vec3> & out_normals
+	Object_T * object
 );
 
 

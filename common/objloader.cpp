@@ -19,9 +19,7 @@
 
 bool loadOBJ(
 	const char * path, 
-	std::vector<glm::vec3> & out_vertices, 
-	std::vector<glm::vec2> & out_uvs,
-	std::vector<glm::vec3> & out_normals
+	Object_T * object
 ){
 	printf("Loading OBJ file %s...\n", path);
 
@@ -30,6 +28,9 @@ bool loadOBJ(
 	std::vector<glm::vec2> temp_uvs;
 	std::vector<glm::vec3> temp_normals;
 
+	std::vector<glm::vec3> out_vertices; 
+	std::vector<glm::vec2> out_uvs;
+	std::vector<glm::vec3> out_normals;
 
 	FILE * file = fopen(path, "r");
 	if( file == NULL ){
@@ -107,6 +108,10 @@ bool loadOBJ(
 	
 	}
 	fclose(file);
+
+	object->vertices = out_vertices;
+	object->uvs = out_uvs;
+	object->normals = out_normals;
 	return true;
 }
 

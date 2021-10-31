@@ -7,7 +7,7 @@
 // Include GLEW
 #include <GL/glew.h>
 
-// Include GLFW
+// Include 
 #include <GLFW/glfw3.h>
 GLFWwindow* window;
 
@@ -22,12 +22,121 @@ using namespace glm;
 #include <common/objloader.hpp>
 #include <common/vboindexer.hpp>
 
+/*
+void calcBoundingBox(Object_T * object) {
+    glm::vec3 min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+    glm::vec3 max = glm::vec3(FLT_MIN, FLT_MIN, FLT_MIN);
+
+    for(glm::vec3 it : object->vertices) {
+        if ( it.x < min.x ) min.x = it.x;
+        if ( it.y < min.y ) min.y = it.y;
+        if ( it.z < min.z ) min.z = it.z;
+        if ( it.x > max.x ) max.x = it.x;
+        if ( it.y > max.y ) max.y = it.y;
+        if ( it.z > max.z ) max.z = it.z;
+    }
+
+    object->bounding_box_min = min;
+    object->bounding_box_max = max;
+
+    return;
+}
+*/
+
+void fillobjectbuffers(Object_T * object) {
+    glGenBuffers(1, &object->vertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
+    glBufferData(GL_ARRAY_BUFFER, object->vertices.size() * sizeof(glm::vec3), &object->vertices[0], GL_STATIC_DRAW);
+
+    glGenBuffers(1, &object->uvbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->uvbuffer);
+    glBufferData(GL_ARRAY_BUFFER, object->uvs.size() * sizeof(glm::vec2), &object->uvs[0], GL_STATIC_DRAW);
+
+    glGenBuffers(1, &object->normalbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->normalbuffer);
+    glBufferData(GL_ARRAY_BUFFER, object->normals.size() * sizeof(glm::vec3), &object->normals[0], GL_STATIC_DRAW);
+	
+    return;
+}
+
+void drawobject(Object_T * object) {
+    // 1rst attribute buffer : vertices
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,(void*)0);
+
+    // 2nd attribute buffer : uvs
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, object->uvbuffer);
+    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,(void*)0);
+
+    // 3rd attribute buffer : normals
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, object->normalbuffer);
+    glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,0,(void*)0);
+
+    // draw the triangles !
+    glDrawArrays(GL_TRIANGLES, 0, object->vertices.size() );
+
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+
+    return;
+}
+
+void useprogram(std::string shader_name, GLuint programid) {
+    if (shader_name == "room") {
+	    glUseProgram(programid);
+
+        GLuint matrixID = glGetUniformLocation(programid, "MVP");
+	    GLuint viewmatrixID = glGetUniformLocation(programid, "V");
+	    GLuint modelmatrixID = glGetUniformLocation(programid, "M");
+	    GLuint lightID = glGetUniformLocation(programid, "LightPosition_worldspace");
+	    GLuint cameraID = glGetUniformLocation(programid, "CameraPosition_worldspace");
+
+	    glm::vec3 camera_position = computeMatricesFromInputs();
+	    glm::mat4 projectionmatrix = getProjectionMatrix();
+	    glm::mat4 viewmatrix = getViewMatrix();
+	    glm::mat4 modelmatrix = glm::mat4(1.0);
+	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
+
+	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
+	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
+	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
+        // std::cout << "camera.x" << camera_position.x << " camera.y: " << camera_position.y << " camera.z " << camera_position.z << std::endl;
+	    glUniform3f(lightID, camera_position.x, camera_position.y + 5, camera_position.z);
+
+    } else if (shader_name == "portal") {
+	    glUseProgram(programid);
+
+	    GLuint matrixID = glGetUniformLocation(programid, "MVP");
+	    GLuint viewmatrixID = glGetUniformLocation(programid, "V");
+	    GLuint modelmatrixID = glGetUniformLocation(programid, "M");
+	    GLuint lightID = glGetUniformLocation(programid, "LightPosition_worldspace");
+	    GLuint cameraID = glGetUniformLocation(programid, "CameraPosition_worldspace");
+
+	    glm::vec3 camera_position = computeMatricesFromInputs();
+	    glm::mat4 projectionmatrix = getProjectionMatrix();
+	    glm::mat4 viewmatrix = getViewMatrix();
+	    glm::mat4 modelmatrix = glm::mat4(1.0);
+	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
+
+	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
+	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
+	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
+
+	    glUniform3f(lightID, camera_position.x, camera_position.y + 5, camera_position.z);
+
+    }
+}
+
 int main( void )
 {
-	// Initialise GLFW
+	// initialise glfw
 	if( !glfwInit() )
 	{
-		fprintf( stderr, "Failed to initialize GLFW\n" );
+		fprintf( stderr, "failed to initialize glfw\n" );
 		getchar();
 		return -1;
 	}
@@ -35,194 +144,115 @@ int main( void )
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // to make macos happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Tutorial 08 - Basic Shading", NULL, NULL);
+	// open a window and create its opengl context
+	window = glfwCreateWindow( 1024, 768, "tutorial 08 - basic shading", NULL, NULL);
 	if( window == NULL ){
-		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
+		fprintf( stderr, "failed to open glfw window. if you have an intel gpu, they are not 3.3 compatible. try the 2.1 version of the tutorials.\n" );
 		getchar();
 		glfwTerminate();
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
 
-	// Initialize GLEW
-	glewExperimental = true; // Needed for core profile
+	// initialize glew
+	glewExperimental = true; // needed for core profile
 	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Failed to initialize GLEW\n");
+		fprintf(stderr, "failed to initialize glew\n");
 		getchar();
 		glfwTerminate();
 		return -1;
 	}
 
-	// Ensure we can capture the escape key being pressed below
+	// ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-    	// Hide the mouse and enable unlimited mouvement
-    	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // hide the mouse and enable unlimited mouvement
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
-    	// Set the mouse at the center of the screen
-    	glfwPollEvents();
-    	glfwSetCursorPos(window, 1024/2, 768/2);
+    // set the mouse at the center of the screen
+    glfwPollEvents();
+    glfwSetCursorPos(window, 1024/2, 768/2);
 
-	// Dark blue background
+	// dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
-	// Enable depth test
+	// enable depth test
 	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
+	// accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS); 
+	// cull triangles which normal is not towards the camera
+	// glEnable(gl_cull_face);
 
-	// Cull triangles which normal is not towards the camera
-	// glEnable(GL_CULL_FACE);
+	GLuint vertexarrayid;
+	glGenVertexArrays(1, &vertexarrayid);
+	glBindVertexArray(vertexarrayid);
 
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
+	// create and compile our glsl program from the shaders
+	GLuint room_programID = LoadShaders("./shaders/room.vert", "./shaders/room.frag");
+	GLuint portal_programID = LoadShaders("./shaders/portal.vert", "./shaders/portal.frag");
 
-	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders( "basic.vert", "basic.frag" );
+	// read our .obj file
+	Object_T room_1;
+	bool res1 = loadOBJ("./scene/simple_scene_room_1.obj", &room_1);
+	fillobjectbuffers(&room_1);
 
-	// Get a handle for our "MVP" uniform
-	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-	GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
-	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
-
-	// Load the texture
-	GLuint Texture = loadDDS("uvmap.DDS");
+	Object_T room_2;
+	bool res2 = loadOBJ("./scene/simple_scene_room_2.obj", &room_2);
+	fillobjectbuffers(&room_2);
 	
-	// Get a handle for our "myTextureSampler" uniform
-	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
-
-	// Read our .obj file
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals;
-	bool res = loadOBJ("./scene/pgr_scene.obj", vertices, uvs, normals);
-
-	// Load it into a VBO
-
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
-	GLuint uvbuffer;
-	glGenBuffers(1, &uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-
-	GLuint normalbuffer;
-	glGenBuffers(1, &normalbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
-
-	// Get a handle for our "LightPosition" uniform
-	glUseProgram(programID);
-	GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
-	GLuint CameraID = glGetUniformLocation(programID, "CameraPosition_worldspace");
-	
+	Object_T portal_1;
+	bool res3 = loadOBJ("./scene/portal.obj", &portal_1);
+	fillobjectbuffers(&portal_1);
+    
+    bool wireframe = false;
 	do{
 
-		// Clear the screen
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // clear the screen
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		if (glfwGetKey( window, GLFW_KEY_M ) == GLFW_PRESS){
 		  glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+          wireframe = true;
 		}
 
 		if (glfwGetKey( window, GLFW_KEY_N ) == GLFW_PRESS){
 		  glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+          wireframe = false;
 		}
 
-		// Use our shader
-		glUseProgram(programID);
+		useprogram("room", room_programID);
+		drawobject(&room_1);
+		drawobject(&room_2);
 
-		// Compute the MVP matrix from keyboard and mouse input
-		glm::vec3 camera_position = computeMatricesFromInputs();
-		std::cout << "Camera_position: " << camera_position.x << " " << camera_position.y << " " << camera_position.z <<  std::endl;
-		glm::mat4 ProjectionMatrix = getProjectionMatrix();
-		glm::mat4 ViewMatrix = getViewMatrix();
-		glm::mat4 ModelMatrix = glm::mat4(1.0);
-		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		// Send our transformation to the currently bound shader, 
-		// in the "MVP" uniform
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
-		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &ViewMatrix[0][0]);
+		useprogram("portal", portal_programID);
+		drawobject(&portal_1);
 
-		// glm::vec3 lightPos = glm::vec3(20,20,0);
-		glUniform3f(LightID, camera_position.x, camera_position.y + 5, camera_position.z);
+        if (!wireframe)
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        glDisable(GL_BLEND);
 
-		// Bind our texture in Texture Unit 0
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Texture);
-		// Set our "myTextureSampler" sampler to use Texture Unit 0
-		glUniform1i(TextureID, 0);
-
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-			0,                  // attribute
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
-
-		// 2nd attribute buffer : UVs
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-		glVertexAttribPointer(
-			1,                                // attribute
-			2,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
-
-		// 3rd attribute buffer : normals
-		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-		glVertexAttribPointer(
-			2,                                // attribute
-			3,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
-
-		// Draw the triangles !
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size() );
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
-
-		// Swap buffers
+		// swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-	} // Check if the ESC key was pressed or the window was closed
+	} // check if the esc key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
 
-	// Cleanup VBO and shader
-	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
-	glDeleteBuffers(1, &normalbuffer);
-	glDeleteProgram(programID);
-	glDeleteTextures(1, &Texture);
-	glDeleteVertexArrays(1, &VertexArrayID);
+	// cleanup vbo and shader
+	glDeleteBuffers(1, &room_1.vertexbuffer);
+	glDeleteBuffers(1, &room_1.uvbuffer);
+	glDeleteBuffers(1, &room_1.normalbuffer);
+	glDeleteProgram(room_programID);
+	glDeleteVertexArrays(1, &vertexarrayid);
 
-	// Close OpenGL window and terminate GLFW
+	// close opengl window and terminate glfw
 	glfwTerminate();
 
 	return 0;

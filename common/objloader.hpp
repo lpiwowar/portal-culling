@@ -4,6 +4,7 @@
 #include <GL/gl.h>
 typedef struct Cell_T Cell_T;
 typedef struct Portal_T Portal_T;
+typedef struct Graph_T Graph_T;
 
 struct Cell_T {
     unsigned int id;
@@ -40,7 +41,10 @@ struct Portal_T {
     Cell_T *right_cell;
 };
 
-
+struct Graph_T {
+    std::vector<Portal_T *> portals;
+    std::vector<Cell_T *> cells;
+};
 
 template<typename T>
 bool loadOBJ(const char * path, T * object);

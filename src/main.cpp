@@ -23,7 +23,20 @@ using namespace glm;
 #include <common/vboindexer.hpp>
 
 
-void calcBoundingBox(Object_T * object) {
+bool isInsideObject(glm::vec3 coordinates, Cell_T * object) {
+    if (coordinates.x < object->bounding_box_max.x &&
+        coordinates.y < object->bounding_box_max.y &&
+        coordinates.z < object->bounding_box_max.z &&
+        coordinates.x > object->bounding_box_min.x &&
+        coordinates.y > object->bounding_box_min.y &&
+        coordinates.z > object->bounding_box_min.z)
+        return true;
+    else
+        return false;
+}
+
+template<typename T>
+void calcBoundingBox(T * object) {
     glm::vec3 min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
     glm::vec3 max = glm::vec3(FLT_MIN, FLT_MIN, FLT_MIN);
 
@@ -42,7 +55,8 @@ void calcBoundingBox(Object_T * object) {
     return;
 }
 
-void fillObjectBuffers(Object_T * object) {
+template<typename T> 
+void fillObjectBuffers(T * object) {
     glGenBuffers(1, &object->vertexbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, object->vertices.size() * sizeof(glm::vec3), &object->vertices[0], GL_STATIC_DRAW);
@@ -58,7 +72,8 @@ void fillObjectBuffers(Object_T * object) {
     return;
 }
 
-void drawObject(Object_T * object) {
+template<typename T>
+void drawObject(T * object) {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
@@ -194,19 +209,17 @@ int main( void )
 	GLuint portal_programID = LoadShaders("./shaders/portal.vert", "./shaders/portal.frag");
 
 	// read our .obj file
-	Object_T room_1;
+	Cell_T room_1;
 	bool res1 = loadOBJ("./scene/simple_scene_room_1.obj", &room_1);
 	fillObjectBuffers(&room_1);
     calcBoundingBox(&room_1);
-    std::cout << "box_min.x: " << room_1.bounding_box_min.x << " box_min.y: " << room_1.bounding_box_min.y << " box_min.z: " << room_1.bounding_box_min.z << std::endl;
-    std::cout << "box_max.x: " << room_1.bounding_box_max.x << " box_max.y: " << room_1.bounding_box_max.y << " box_max.z: " << room_1.bounding_box_max.z << std::endl;
 
-	Object_T room_2;
+	Cell_T room_2;
 	bool res2 = loadOBJ("./scene/simple_scene_room_2.obj", &room_2);
 	fillObjectBuffers(&room_2);
     calcBoundingBox(&room_2);
 
-	Object_T portal_1;
+	Portal_T portal_1;
 	bool res3 = loadOBJ("./scene/portal.obj", &portal_1);
 	fillObjectBuffers(&portal_1);
     calcBoundingBox(&portal_1);
@@ -226,6 +239,10 @@ int main( void )
 		  glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
           wireframe = false;
 		}
+
+	    glm::vec3 camera_position = computeMatricesFromInputs();
+        if (isInsideObject(camera_position, &room_1))
+            std::cout << "INSIDE ROOM_1" << std::endl;
 
 		useProgram("room", room_programID);
 		drawObject(&room_1);

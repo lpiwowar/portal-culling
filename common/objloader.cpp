@@ -17,10 +17,13 @@
 // - More secure. Change another line and you can inject code.
 // - Loading from memory, stream, etc
 
-bool loadOBJ(
-	const char * path, 
-	Object_T * object
-){
+static unsigned int id = 0;
+
+template bool loadOBJ<Cell_T>(const char * path, Cell_T * object);
+template bool loadOBJ<Portal_T>(const char * path, Portal_T * object);
+
+template<typename T>
+bool loadOBJ(const char * path, T * object) {
 	printf("Loading OBJ file %s...\n", path);
 
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
@@ -112,9 +115,9 @@ bool loadOBJ(
 	object->vertices = out_vertices;
 	object->uvs = out_uvs;
 	object->normals = out_normals;
+    object->id = id++;
 	return true;
 }
-
 
 #ifdef USE_ASSIMP // don't use this #define, it's only for me (it AssImp fails to compile on your machine, at least all the other tutorials still work)
 

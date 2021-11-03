@@ -66,8 +66,11 @@ add_executable(portal_culling
 	common/objloader.cpp
 	common/objloader.hpp
 
-	src/TransformVertexShader.vertexshader
-	src/TextureFragmentShader.fragmentshader
+	src/shaders/portal.vert
+	src/shaders/portal.frag
+
+	src/shaders/room.vert
+	src/shaders/room.frag
 )
 target_link_libraries(portal_culling
 	${ALL_LIBS}

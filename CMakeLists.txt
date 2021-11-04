@@ -57,14 +57,13 @@ add_definitions(
 # Tutorial 7
 add_executable(portal_culling
 	src/main.cpp
-	common/shader.cpp
-	common/shader.hpp
-	common/controls.cpp
-	common/controls.hpp
-	common/texture.cpp
-	common/texture.hpp
-	common/objloader.cpp
-	common/objloader.hpp
+	src/shader.cpp
+	src/shader.hpp
+	src/controls.cpp
+	src/controls.hpp
+	src/objloader.cpp
+	src/objloader.hpp
+	src/graph.hpp
 
 	src/shaders/portal.vert
 	src/shaders/portal.frag

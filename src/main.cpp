@@ -16,12 +16,9 @@ GLFWwindow* window;
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
-#include <common/shader.hpp>
-#include <common/texture.hpp>
-#include <common/controls.hpp>
-#include <common/objloader.hpp>
-#include <common/vboindexer.hpp>
-
+#include "shader.hpp"
+#include "controls.hpp"
+#include "objloader.hpp"
 
 void makeEdge(Cell_T *left_cell, Portal_T *portal, Cell_T *right_cell) {
 
@@ -119,9 +116,6 @@ void drawObject(T * object) {
 
     return;
 }
-
-void drawAllScene(Graph_T *graph) {
-  }
 
 void useProgram(std::string shader_name, GLuint programid) {
     if (shader_name == "room") {
@@ -332,19 +326,18 @@ int main( void )
 
         } else {
             useProgram("room", room_programID);
+            GLuint queryID;
+            GLint succ;
+            glGenQueries(1, &queryID);
+            glBeginQuery(GL_ANY_SAMPLES_PASSED, queryID);
             drawObject(active_cell);
+            glEndQuery(GL_ANY_SAMPLES_PASSED);
+            glGetQueryObjectiv(queryID, GL_QUERY_RESULT, &succ);
+            std::cout << "result: " << succ << std::endl;
+    /*
             std::vector<Portal_T *> visible_portals = getVisiblePortals(active_cell);
             for (const auto& portal: visible_portals) {
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-                useProgram("portal", portal_programID);
-                drawObject(portal);
-                if (!wireframe)
-                    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-                glDisable(GL_BLEND);
-
-                useProgram("room", room_programID);
+               useProgram("room", room_programID);
 
                 // TODO - Tady je taky neco spatne - ten portal se nejak spatne renderuj
                 if (portal->left_cell->id == active_cell->id) {
@@ -354,9 +347,17 @@ int main( void )
                     // std::cout << "B: " << portal->right_cell->id << std::endl;
                     drawObject(portal->left_cell);
                 }
- 
-            }
+                
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+                useProgram("portal", portal_programID);
+                drawObject(portal);
+                if (!wireframe)
+                    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+                glDisable(GL_BLEND);
+            }
+    */
         }
 
 #if 0

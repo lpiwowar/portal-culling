@@ -2,6 +2,9 @@
 #define OBJLOADER_H
 
 #include <GL/gl.h>
+#include "graph.hpp"
+
+#if 0
 typedef struct Cell_T Cell_T;
 typedef struct Portal_T Portal_T;
 typedef struct Graph_T Graph_T;
@@ -45,6 +48,8 @@ struct Graph_T {
     std::vector<Portal_T *> portals;
     std::vector<Cell_T *> cells;
 };
+#endif
+
 
 template<typename T>
 bool loadOBJ(const char * path, T * object);

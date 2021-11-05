@@ -19,6 +19,7 @@ using namespace glm;
 #include "shader.hpp"
 #include "controls.hpp"
 #include "objloader.hpp"
+#include "text2D.hpp"
 
 void makeEdge(Cell_T *left_cell, Portal_T *portal, Cell_T *right_cell) {
 
@@ -305,6 +306,9 @@ int main( void )
 
         Cell_T *active_cell = NULL;
         active_cell = getCurrentCell(&graph);
+        
+        initText2D("./textures/roboto2.DDS");
+        printText2D("A", 4, 500, 60);
 
         if (!active_cell) {
             useProgram("room", room_programID);
@@ -328,12 +332,15 @@ int main( void )
             useProgram("room", room_programID);
             GLuint queryID;
             GLint succ;
+            
+#if 0
             glGenQueries(1, &queryID);
             glBeginQuery(GL_ANY_SAMPLES_PASSED, queryID);
             drawObject(active_cell);
             glEndQuery(GL_ANY_SAMPLES_PASSED);
             glGetQueryObjectiv(queryID, GL_QUERY_RESULT, &succ);
-            std::cout << "result: " << succ << std::endl;
+#endif
+
     /*
             std::vector<Portal_T *> visible_portals = getVisiblePortals(active_cell);
             for (const auto& portal: visible_portals) {

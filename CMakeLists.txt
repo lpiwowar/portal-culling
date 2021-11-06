@@ -58,22 +58,22 @@ add_definitions(
 add_executable(portal_culling
 	src/main.cpp
 
-	src/shader.cpp
-	src/shader.hpp
+	src/libs/shader.cpp
+	src/libs/shader.hpp
 
-	src/texture.cpp
-	src/texture.hpp
+	src/libs/texture.cpp
+	src/libs/texture.hpp
 
-	src/controls.cpp
-	src/controls.hpp
+	src/libs/controls.cpp
+	src/libs/controls.hpp
 
-	src/objloader.cpp
-	src/objloader.hpp
+	src/libs/objloader.cpp
+	src/libs/objloader.hpp
 
-	src/graph.hpp
+	src/libs/graph.hpp
 
-	src/text2D.cpp
-	src/text2D.hpp
+	src/libs/text2D.cpp
+	src/libs/text2D.hpp
 
 	src/shaders/portal.vert
 	src/shaders/portal.frag

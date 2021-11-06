@@ -1,8 +1,10 @@
 // Include standard headers
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
+#include <string>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -16,10 +18,10 @@ GLFWwindow* window;
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
-#include "shader.hpp"
-#include "controls.hpp"
-#include "objloader.hpp"
-#include "text2D.hpp"
+#include "libs/shader.hpp"
+#include "libs/controls.hpp"
+#include "libs/objloader.hpp"
+#include "libs/text2D.hpp"
 
 void makeEdge(Cell_T *left_cell, Portal_T *portal, Cell_T *right_cell) {
 
@@ -92,7 +94,7 @@ void fillObjectBuffers(T * object) {
 }
 
 template<typename T>
-void drawObject(T * object) {
+void drawObject(T * object, GLuint primitiveType = GL_TRIANGLES) {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
@@ -109,7 +111,7 @@ void drawObject(T * object) {
     glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,0,(void*)0);
 
     // draw the triangles !
-    glDrawArrays(GL_TRIANGLES, 0, object->vertices.size() );
+    glDrawArrays(primitiveType, 0, object->vertices.size() );
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
@@ -164,7 +166,35 @@ void useProgram(std::string shader_name, GLuint programid) {
     }
 }
 
-std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell) {
+bool portalIsVisible(Portal_T *portal, GLuint portal_programID) {
+    glDepthMask(GL_FALSE);  
+    
+    glEnable(GL_BLEND);
+    // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    GLuint queryID;
+    GLint anyFragRendered;
+    glGenQueries(1, &queryID);
+    glBeginQuery(GL_ANY_SAMPLES_PASSED, queryID);
+
+    useProgram("portal", portal_programID);
+    drawObject(portal);
+
+    glEndQuery(GL_ANY_SAMPLES_PASSED);
+    glGetQueryObjectiv(queryID, GL_QUERY_RESULT, &anyFragRendered);
+
+    //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    glDisable(GL_BLEND);
+
+    glDepthMask(GL_TRUE);  
+    if (anyFragRendered)
+        return true;
+    else 
+        return false;
+}
+
+std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell, GLuint portal_programID) {
     glm::mat4 projectionmatrix = getProjectionMatrix();
     glm::mat4 viewmatrix = getViewMatrix();
     glm::mat4 modelmatrix = glm::mat4(1.0);
@@ -172,7 +202,11 @@ std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell) {
     
     std::vector<Portal_T *> visiblePortals;
     for (auto& portal: active_cell->portals) {
-        
+
+        if (portalIsVisible(portal, portal_programID))
+            visiblePortals.insert(visiblePortals.end(), portal);
+
+/*
         bool visiblePortal = false;
         for (const auto& vertex: portal->vertices) {
             glm::vec4 homog_projected_vertex = mvp * vec4(vertex, 1);
@@ -188,9 +222,36 @@ std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell) {
 
         if (visiblePortal)
             visiblePortals.insert(visiblePortals.end(), portal);
+*/
     }
 
     return visiblePortals;
+}
+
+void portalCulling( Cell_T * cell, 
+                    std::vector<unsigned int> visitedCells,
+                    GLuint portalProgramID,
+                    GLuint cellProgramID)
+{
+
+    if(std::find(visitedCells.begin(), visitedCells.end(), cell->id) != visitedCells.end())
+        return;
+
+    visitedCells.insert(visitedCells.end(), {cell->id});
+
+    useProgram("room", cellProgramID);
+    drawObject(cell);
+
+    std::vector<Portal_T *> visiblePortals = getVisiblePortals(cell, portalProgramID);
+    
+    for(const auto &portal: visiblePortals) {
+        if(portal->left_cell->id == cell->id) 
+            portalCulling(portal->right_cell, visitedCells, portalProgramID, cellProgramID);
+        else
+            portalCulling(portal->left_cell, visitedCells, portalProgramID, cellProgramID);
+    }
+
+    return;
 }
 
 int main( void )
@@ -283,6 +344,7 @@ int main( void )
     makeEdge(&cell_1, &portal_1, &cell_2);
 
     bool wireframe = false;
+    initText2D("textures/Holstein.DDS");
 	do{
 
         // clear the screen
@@ -298,24 +360,21 @@ int main( void )
           wireframe = false;
 		}
 
-#if 0
-	    glm::vec3 camera_position = computeMatricesFromInputs();
-        if (isInsideObject(camera_position, &cell_1))
-            std::cout << "INSIDE ROOM_1" << std::endl;
-#endif
-
         Cell_T *active_cell = NULL;
         active_cell = getCurrentCell(&graph);
-        
-        initText2D("./textures/Holstein.DDS");
-        printText2D("#Vertices: ", 10, 0, 0);
+
+        GLuint NumPrimitivesQueryID;
+        GLint NumPrimitivesQueryResult;
+        glGenQueries(1, &NumPrimitivesQueryID);
+        glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
         if (!active_cell) {
+
             useProgram("room", room_programID);
             for(auto const& cell: graph.cells) {
 		        drawObject(cell);
             }
-        
+       
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -327,24 +386,22 @@ int main( void )
             if (!wireframe)
                 glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
             glDisable(GL_BLEND);
-
-        } else {
-            useProgram("room", room_programID);
-            GLuint queryID;
-            GLint succ;
             
+        
+        } else {
+            std::vector<unsigned int> visitedCells; 
+            portalCulling(active_cell, visitedCells, portal_programID, room_programID);
 #if 0
-            glGenQueries(1, &queryID);
-            glBeginQuery(GL_ANY_SAMPLES_PASSED, queryID);
+            useProgram("room", room_programID);
             drawObject(active_cell);
-            glEndQuery(GL_ANY_SAMPLES_PASSED);
-            glGetQueryObjectiv(queryID, GL_QUERY_RESULT, &succ);
+            GLuint queryID2;
+            GLint succ;
 #endif
-
-    /*
-            std::vector<Portal_T *> visible_portals = getVisiblePortals(active_cell);
+#if 0 
+            std::vector<Portal_T *> visible_portals = getVisiblePortals(active_cell, portal_programID);
             for (const auto& portal: visible_portals) {
-               useProgram("room", room_programID);
+                
+                useProgram("room", room_programID);
 
                 // TODO - Tady je taky neco spatne - ten portal se nejak spatne renderuj
                 if (portal->left_cell->id == active_cell->id) {
@@ -355,6 +412,7 @@ int main( void )
                     drawObject(portal->left_cell);
                 }
                 
+
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -363,36 +421,22 @@ int main( void )
                 if (!wireframe)
                     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
                 glDisable(GL_BLEND);
+
             }
-    */
+#endif 
+
         }
 
-#if 0
-        Cell_T *active_cell = NULL;
-        active_cell = getCurrentCell(&graph);
-        if (active_cell != NULL)
-            std::cout << "ACTIVE CELL ID: " << active_cell->id << std::endl;
-        else
-            std::cout << "NULL" << std::endl;
+        glEndQuery(GL_PRIMITIVES_GENERATED);
+        glGetQueryObjectiv(NumPrimitivesQueryID, GL_QUERY_RESULT, &NumPrimitivesQueryResult);
 
-		useProgram("room", room_programID);
-		drawObject(&cell_1);
-		drawObject(&cell_2);
+        std::string str_num_vertices = "# Primitives: " + std::to_string(NumPrimitivesQueryResult);
+        printText2D(str_num_vertices.c_str(), 0, 0, 10);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		useProgram("portal", portal_programID);
-		drawObject(&portal_1);
-
-        if (!wireframe)
-            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-        glDisable(GL_BLEND);
-
-#endif
 		// swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+    
 
 	} // check if the esc key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
@@ -404,6 +448,7 @@ int main( void )
 	glDeleteBuffers(1, &cell_1.normalbuffer);
 	glDeleteProgram(room_programID);
 	glDeleteVertexArrays(1, &vertexarrayid);
+    cleanupText2D();
 
 	// close opengl window and terminate glfw
 	glfwTerminate();

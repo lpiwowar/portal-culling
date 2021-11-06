@@ -229,7 +229,7 @@ std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell, GLuint portal_pro
 }
 
 void portalCulling( Cell_T * cell, 
-                    std::vector<unsigned int> visitedCells,
+                    std::vector<unsigned int> &visitedCells,
                     GLuint portalProgramID,
                     GLuint cellProgramID)
 {
@@ -318,6 +318,7 @@ int main( void )
 	GLuint portal_programID = LoadShaders("./shaders/portal.vert", "./shaders/portal.frag");
 
 	// read our .obj file
+#if 0
 	Cell_T cell_1;
 	bool res1 = loadOBJ("./scene/simple_scene_cell_1.obj", &cell_1);
 	fillObjectBuffers(&cell_1);
@@ -332,16 +333,89 @@ int main( void )
 	bool res3 = loadOBJ("./scene/portal.obj", &portal_1);
 	fillObjectBuffers(&portal_1);
     calcBoundingBox(&portal_1);
-    
+#endif 
+
+    Cell_T cell_1;
+	bool res1 = loadOBJ("./scene/pgr_scene/pgr_room1.obj", &cell_1);
+	fillObjectBuffers(&cell_1);
+    calcBoundingBox(&cell_1);
+#if 0
+    std::cout << cell_1.bounding_box_min.x << " " << cell_1.bounding_box_min.y << " " << cell_1.bounding_box_min.y << std::endl;
+    std::cout << cell_1.bounding_box_max.x << " " << cell_1.bounding_box_max.y << " " << cell_1.bounding_box_max.y << std::endl;
+#endif
+
+    Cell_T cell_2;
+	bool res2 = loadOBJ("./scene/pgr_scene/pgr_room2.obj", &cell_2);
+	fillObjectBuffers(&cell_2);
+    calcBoundingBox(&cell_2);
+#if 0
+    std::cout << cell_2.bounding_box_min.x << " " << cell_2.bounding_box_min.y << " " << cell_2.bounding_box_min.y << std::endl;
+    std::cout << cell_2.bounding_box_max.x << " " << cell_2.bounding_box_max.y << " " << cell_2.bounding_box_max.y << std::endl;
+#endif
+
+    Cell_T cell_3;
+	loadOBJ("./scene/pgr_scene/pgr_room3.obj", &cell_3);
+	fillObjectBuffers(&cell_3);
+    calcBoundingBox(&cell_3);
+
+    Cell_T cell_4;
+	loadOBJ("./scene/pgr_scene/pgr_room4.obj", &cell_4);
+	fillObjectBuffers(&cell_4);
+    calcBoundingBox(&cell_4);
+
+    Cell_T cell_5;
+	loadOBJ("./scene/pgr_scene/pgr_room5.obj", &cell_5);
+	fillObjectBuffers(&cell_5);
+    calcBoundingBox(&cell_5);
+
+	Portal_T portal_1;
+	loadOBJ("./scene/pgr_scene/pgr_portal1.obj", &portal_1);
+	fillObjectBuffers(&portal_1);
+    calcBoundingBox(&portal_1);
+
+	Portal_T portal_2;
+	loadOBJ("./scene/pgr_scene/pgr_portal2.obj", &portal_2);
+	fillObjectBuffers(&portal_2);
+    calcBoundingBox(&portal_2);
+
+	Portal_T portal_3;
+	loadOBJ("./scene/pgr_scene/pgr_portal3.obj", &portal_3);
+	fillObjectBuffers(&portal_3);
+    calcBoundingBox(&portal_3);
+
+	Portal_T portal_4;
+	loadOBJ("./scene/pgr_scene/pgr_portal4.obj", &portal_4);
+	fillObjectBuffers(&portal_4);
+    calcBoundingBox(&portal_4);
+
+	Portal_T portal_5;
+	loadOBJ("./scene/pgr_scene/pgr_portal5.obj", &portal_5);
+	fillObjectBuffers(&portal_5);
+    calcBoundingBox(&portal_5);
+#if 0
+    std::cout << cell_5.bounding_box_min.x << " " << cell_5.bounding_box_min.y << " " << cell_5.bounding_box_min.y << std::endl;
+    std::cout << cell_5.bounding_box_max.x << " " << cell_5.bounding_box_max.y << " " << cell_5.bounding_box_max.y << std::endl;
+#endif
+
     ///////////////////////////////////////////////////////////
     //                   GRAPH DEFINITION                    //
     ///////////////////////////////////////////////////////////
-    
+#if 0 
     Graph_T graph;
     graph.portals.insert(graph.portals.end(), {&portal_1});
     graph.cells.insert(graph.cells.end(), {&cell_1, &cell_2});
     
     makeEdge(&cell_1, &portal_1, &cell_2);
+#endif
+
+    Graph_T graph;
+    graph.cells.insert(graph.cells.end(), {&cell_1, &cell_3, &cell_4, &cell_5});
+    graph.portals.insert(graph.portals.end(), {&portal_1, &portal_3, &portal_4, &portal_5});
+    
+    makeEdge(&cell_1, &portal_1, &cell_5);
+    makeEdge(&cell_3, &portal_3, &cell_5);
+    makeEdge(&cell_3, &portal_4, &cell_5);
+    makeEdge(&cell_4, &portal_5, &cell_5);
 
     bool wireframe = false;
     initText2D("textures/Holstein.DDS");
@@ -369,7 +443,6 @@ int main( void )
         glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
         if (!active_cell) {
-
             useProgram("room", room_programID);
             for(auto const& cell: graph.cells) {
 		        drawObject(cell);

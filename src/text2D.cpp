@@ -11,6 +11,7 @@ using namespace glm;
 #include "texture.hpp"
 
 #include "text2D.hpp"
+#include <iostream>
 
 unsigned int Text2DTextureID;
 unsigned int Text2DVertexBufferID;
@@ -45,14 +46,15 @@ void printText2D(const char * text, int x, int y, int size){
 	for ( unsigned int i=0 ; i<length ; i++ ){
 
 #if 1
-		glm::vec2 vertex_up_left    = glm::vec2( x+i*size     , y+size );
-		glm::vec2 vertex_up_right   = glm::vec2( x+i*size+size+100, y+size );
-		glm::vec2 vertex_down_right = glm::vec2( x+i*size+size+100, y-100      );
-		glm::vec2 vertex_down_left  = glm::vec2( x+i*size     , y-100      );
+        size = 10;
+		glm::vec2 vertex_up_left    = glm::vec2( x+i*size     , y+size+10);
+		glm::vec2 vertex_up_right   = glm::vec2( x+i*size+size, y+size+10);
+		glm::vec2 vertex_down_right = glm::vec2( x+i*size+size, y);
+		glm::vec2 vertex_down_left  = glm::vec2( x+i*size     , y);
 #endif
 #if 0
-		glm::vec2 vertex_up_left    = glm::vec2( 20     , 200 );
-		glm::vec2 vertex_up_right   = glm::vec2( 500 , 200 );
+		glm::vec2 vertex_up_left    = glm::vec2( 20     , 600 );
+		glm::vec2 vertex_up_right   = glm::vec2( 500 , 600 );
 		glm::vec2 vertex_down_right = glm::vec2( 500 , 10      );
 		glm::vec2 vertex_down_left  = glm::vec2( 20, 10 );
 #endif
@@ -65,20 +67,39 @@ void printText2D(const char * text, int x, int y, int size){
 		vertices.push_back(vertex_down_left);
 
 		char character = text[i];
-		float uv_x = (character%25)/25.0f;
-		float uv_y = (character/25)/25.0f;
+        // std::cout << "Character: " << character << "(" << (int)character << ")" << std::endl;
+		float uv_x = (character%16)/16.0f;
+		float uv_y = (character/16)/16.0f;
+        // std::cout << "uv_x: " << uv_x << " uv_y: " << uv_y << std::endl;
+
+#if 1
+        float corr_hor = 0.02;
+		glm::vec2 uv_up_left    = glm::vec2( uv_x+corr_hor           , uv_y );
+		glm::vec2 uv_up_right   = glm::vec2( uv_x+1.0f/16.0f-corr_hor, uv_y );
+		glm::vec2 uv_down_right = glm::vec2( uv_x+1.0f/16.0f-corr_hor, (uv_y + 1.0f/16.0f) );
+		glm::vec2 uv_down_left  = glm::vec2( uv_x+corr_hor           , (uv_y + 1.0f/16.0f) );
+        
+#endif
 
 #if 0
-		glm::vec2 uv_up_left    = glm::vec2( uv_x           , uv_y );
-		glm::vec2 uv_up_right   = glm::vec2( uv_x+1.0f/25.0f, uv_y );
-		glm::vec2 uv_down_right = glm::vec2( uv_x+1.0f/25.0f, (uv_y + 1.0f/25.0f) );
-		glm::vec2 uv_down_left  = glm::vec2( uv_x           , (uv_y + 1.0f/25.0f) );
+        float corr_hor = 0.00;
+		glm::vec2 uv_down_right  = glm::vec2( uv_x+corr_hor           , uv_y+0.3 );
+		glm::vec2 uv_down_left   = glm::vec2( uv_x+1.0f/16.0f-corr_hor, uv_y+0.3);
+		glm::vec2 uv_up_left     = glm::vec2( uv_x+1.0f/16.0f-corr_hor, (uv_y + 1.0f/16.0f) );
+		glm::vec2 uv_up_right    = glm::vec2( uv_x+corr_hor           , (uv_y + 1.0f/16.0f) );
 #endif
-#if 1 
+
+#if 0 
 		glm::vec2 uv_up_left    = glm::vec2( 0, 1);
 		glm::vec2 uv_up_right   = glm::vec2( 1, 1);
 		glm::vec2 uv_down_right = glm::vec2( 1, 0);
 		glm::vec2 uv_down_left  = glm::vec2( 0, 0); 
+#endif
+#if 0
+		glm::vec2 uv_up_left    = glm::vec2( 19 * (1/26.0f), 1);
+		glm::vec2 uv_up_right   = glm::vec2( 20 * (1/26.0f), 1);
+		glm::vec2 uv_down_right = glm::vec2( 20 * (1/26.0f), 1-(2 * (1/26.0f)));
+		glm::vec2 uv_down_left  = glm::vec2( 19 * (1/26.0f), 1-(2 * (1/26.0f))); 
 #endif
 		UVs.push_back(uv_up_left   );
 		UVs.push_back(uv_down_left );

@@ -307,8 +307,8 @@ int main( void )
         Cell_T *active_cell = NULL;
         active_cell = getCurrentCell(&graph);
         
-        initText2D("./textures/roboto2.DDS");
-        printText2D("A", 4, 500, 60);
+        initText2D("./textures/Holstein.DDS");
+        printText2D("#Vertices: ", 10, 0, 0);
 
         if (!active_cell) {
             useProgram("room", room_programID);

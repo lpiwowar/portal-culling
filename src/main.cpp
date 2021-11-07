@@ -1,4 +1,10 @@
-// Include standard headers
+/**
+ * @file    main.cpp
+ * @author  Lukas Piwowarski
+ * @date    2021 November
+ * @brief   This file contains code for Portal Occlusion Culling. 
+ */
+
 #include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,14 +12,11 @@
 #include <iostream>
 #include <string>
 
-// Include GLEW
 #include <GL/glew.h>
 
-// Include 
 #include <GLFW/glfw3.h>
 GLFWwindow* window;
 
-// Include GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
@@ -22,79 +25,53 @@ using namespace glm;
 #include "libs/controls.hpp"
 #include "libs/objloader.hpp"
 #include "libs/text2D.hpp"
+#include "scene.hpp"
 
-void makeEdge(Cell_T *left_cell, Portal_T *portal, Cell_T *right_cell) {
-
-    left_cell->portals.insert(left_cell->portals.end(), {portal});
-    right_cell->portals.insert(right_cell->portals.end(), {portal});
-    portal->left_cell = left_cell;
-    portal->right_cell = right_cell;
-
-}
-
+/**
+ * @brief Function that checks whether given @param coordinates are inside 
+ *        bounding box of given @param object.
+ * @param coordinates Coordinates to be checked.
+ * @param object      Object with the bounding box. 
+ * @return void
+ */
 bool isInsideObject(glm::vec3 coordinates, Cell_T * object) {
-    if (coordinates.x < object->bounding_box_max.x &&
-        coordinates.y < object->bounding_box_max.y &&
-        coordinates.z < object->bounding_box_max.z &&
-        coordinates.x > object->bounding_box_min.x &&
-        coordinates.y > object->bounding_box_min.y &&
-        coordinates.z > object->bounding_box_min.z)
+    if (coordinates.x < object->boundingBoxMax.x &&
+        coordinates.y < object->boundingBoxMax.y &&
+        coordinates.z < object->boundingBoxMax.z &&
+        coordinates.x > object->boundingBoxMin.x &&
+        coordinates.y > object->boundingBoxMin.y &&
+        coordinates.z > object->boundingBoxMin.z)
         return true;
     else
         return false;
 }
 
+/**
+ * @brief Function that returns active cell (cell with bounding box that 
+ *        contains camera).
+ * @param graph Graph that contains candidate active cells.
+ * @return Cell_T* 
+ */
 Cell_T *getCurrentCell(Graph_T *graph) {
-    glm::vec3 camera_position = computeMatricesFromInputs();
+    glm::vec3 cameraPosition = computeMatricesFromInputs();
 
     for(auto const& cell: graph->cells) {
-        if(isInsideObject(camera_position, cell)) {
+        if(isInsideObject(cameraPosition, cell)) {
             return cell;
         } 
     }
 
-    return NULL;
+    return nullptr;
 }
 
+
+/**
+ * @brief Renders given object.
+ * @param object Object to be rendered.
+ * @return void
+ */
 template<typename T>
-void calcBoundingBox(T * object) {
-    glm::vec3 min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
-    glm::vec3 max = glm::vec3(FLT_MIN, FLT_MIN, FLT_MIN);
-
-    for(glm::vec3 it : object->vertices) {
-        if ( it.x < min.x ) min.x = it.x;
-        if ( it.y < min.y ) min.y = it.y;
-        if ( it.z < min.z ) min.z = it.z;
-        if ( it.x > max.x ) max.x = it.x;
-        if ( it.y > max.y ) max.y = it.y;
-        if ( it.z > max.z ) max.z = it.z;
-    }
-
-    object->bounding_box_min = min;
-    object->bounding_box_max = max;
-
-    return;
-}
-
-template<typename T> 
-void fillObjectBuffers(T * object) {
-    glGenBuffers(1, &object->vertexbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
-    glBufferData(GL_ARRAY_BUFFER, object->vertices.size() * sizeof(glm::vec3), &object->vertices[0], GL_STATIC_DRAW);
-
-    glGenBuffers(1, &object->uvbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, object->uvbuffer);
-    glBufferData(GL_ARRAY_BUFFER, object->uvs.size() * sizeof(glm::vec2), &object->uvs[0], GL_STATIC_DRAW);
-
-    glGenBuffers(1, &object->normalbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, object->normalbuffer);
-    glBufferData(GL_ARRAY_BUFFER, object->normals.size() * sizeof(glm::vec3), &object->normals[0], GL_STATIC_DRAW);
-	
-    return;
-}
-
-template<typename T>
-void drawObject(T * object, GLuint primitiveType = GL_TRIANGLES) {
+void drawObject(T * object) {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
@@ -111,7 +88,7 @@ void drawObject(T * object, GLuint primitiveType = GL_TRIANGLES) {
     glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,0,(void*)0);
 
     // draw the triangles !
-    glDrawArrays(primitiveType, 0, object->vertices.size() );
+    glDrawArrays(GL_TRIANGLES, 0, object->vertices.size() );
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
@@ -120,38 +97,27 @@ void drawObject(T * object, GLuint primitiveType = GL_TRIANGLES) {
     return;
 }
 
-void useProgram(std::string shader_name, GLuint programid) {
-    if (shader_name == "room") {
-	    glUseProgram(programid);
+/**
+ * @brief Prepare variables that are necessary for a group of shaders (vertex
+ *        shader, fragment shader, ...) and activate program that represents 
+ *        the group. The function supports two "shader 
+ *        groups": 
+ *          1) "room" - set of variables required by ./shaders/room.* shaders
+ *          2) "portal" - set of variables required by ./shaders/vert.* shaders 
+ * @param shaderName Name of the group of shaders that should be used.
+ * @param programID  ID of the compiled shaders.
+ */
+void useProgram(std::string shaderName, GLuint programID) {
+    if (shaderName == "room") {
+	    glUseProgram(programID);
 
-        GLuint matrixID = glGetUniformLocation(programid, "MVP");
-	    GLuint viewmatrixID = glGetUniformLocation(programid, "V");
-	    GLuint modelmatrixID = glGetUniformLocation(programid, "M");
-	    GLuint lightID = glGetUniformLocation(programid, "LightPosition_worldspace");
-	    GLuint cameraID = glGetUniformLocation(programid, "CameraPosition_worldspace");
+        GLuint matrixID = glGetUniformLocation(programID, "MVP");
+	    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
+	    GLuint modelmatrixID = glGetUniformLocation(programID, "M");
+	    GLuint lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+	    GLuint cameraID = glGetUniformLocation(programID, "CameraPosition_worldspace");
 
-	    glm::vec3 camera_position = computeMatricesFromInputs();
-	    glm::mat4 projectionmatrix = getProjectionMatrix();
-	    glm::mat4 viewmatrix = getViewMatrix();
-	    glm::mat4 modelmatrix = glm::mat4(1.0);
-	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
-
-	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
-	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
-	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
-        // std::cout << "camera.x" << camera_position.x << " camera.y: " << camera_position.y << " camera.z " << camera_position.z << std::endl;
-	    glUniform3f(lightID, camera_position.x, camera_position.y + 5, camera_position.z);
-
-    } else if (shader_name == "portal") {
-	    glUseProgram(programid);
-
-	    GLuint matrixID = glGetUniformLocation(programid, "MVP");
-	    GLuint viewmatrixID = glGetUniformLocation(programid, "V");
-	    GLuint modelmatrixID = glGetUniformLocation(programid, "M");
-	    GLuint lightID = glGetUniformLocation(programid, "LightPosition_worldspace");
-	    GLuint cameraID = glGetUniformLocation(programid, "CameraPosition_worldspace");
-
-	    glm::vec3 camera_position = computeMatricesFromInputs();
+	    glm::vec3 cameraPosition = computeMatricesFromInputs();
 	    glm::mat4 projectionmatrix = getProjectionMatrix();
 	    glm::mat4 viewmatrix = getViewMatrix();
 	    glm::mat4 modelmatrix = glm::mat4(1.0);
@@ -161,16 +127,35 @@ void useProgram(std::string shader_name, GLuint programid) {
 	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
 	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
 
-	    glUniform3f(lightID, camera_position.x, camera_position.y + 5, camera_position.z);
+	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
 
+    } else if (shaderName == "portal") {
+	    glUseProgram(programID);
+
+	    GLuint matrixID = glGetUniformLocation(programID, "MVP");
+	    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
+	    GLuint modelmatrixID = glGetUniformLocation(programID, "M");
+	    GLuint lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+	    GLuint cameraID = glGetUniformLocation(programID, "CameraPosition_worldspace");
+
+	    glm::vec3 cameraPosition = computeMatricesFromInputs();
+	    glm::mat4 projectionmatrix = getProjectionMatrix();
+	    glm::mat4 viewmatrix = getViewMatrix();
+	    glm::mat4 modelmatrix = glm::mat4(1.0);
+	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
+
+	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
+	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
+	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
+
+	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
     }
 }
 
-bool portalIsVisible(Portal_T *portal, GLuint portal_programID) {
+bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) {
     glDepthMask(GL_FALSE);  
     
     glEnable(GL_BLEND);
-    // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     GLuint queryID;
@@ -178,13 +163,12 @@ bool portalIsVisible(Portal_T *portal, GLuint portal_programID) {
     glGenQueries(1, &queryID);
     glBeginQuery(GL_ANY_SAMPLES_PASSED, queryID);
 
-    useProgram("portal", portal_programID);
+    useProgram("portal", portalProgramID);
     drawObject(portal);
 
     glEndQuery(GL_ANY_SAMPLES_PASSED);
     glGetQueryObjectiv(queryID, GL_QUERY_RESULT, &anyFragRendered);
 
-    //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     glDisable(GL_BLEND);
 
     glDepthMask(GL_TRUE);  
@@ -194,7 +178,7 @@ bool portalIsVisible(Portal_T *portal, GLuint portal_programID) {
         return false;
 }
 
-std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell, GLuint portal_programID) {
+std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell, GLuint portalProgramID) {
     glm::mat4 projectionmatrix = getProjectionMatrix();
     glm::mat4 viewmatrix = getViewMatrix();
     glm::mat4 modelmatrix = glm::mat4(1.0);
@@ -203,26 +187,9 @@ std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell, GLuint portal_pro
     std::vector<Portal_T *> visiblePortals;
     for (auto& portal: active_cell->portals) {
 
-        if (portalIsVisible(portal, portal_programID))
+        if (portalIsVisible(portal, portalProgramID))
             visiblePortals.insert(visiblePortals.end(), portal);
 
-/*
-        bool visiblePortal = false;
-        for (const auto& vertex: portal->vertices) {
-            glm::vec4 homog_projected_vertex = mvp * vec4(vertex, 1);
-            glm::vec3 projected_vertex = vec3(homog_projected_vertex.x / homog_projected_vertex.w,
-                                              homog_projected_vertex.y / homog_projected_vertex.w,
-                                              homog_projected_vertex.z / homog_projected_vertex.w);
-            
-            // TODO - upravit tuhle podminku!!! 
-            if (projected_vertex.x < 1 && projected_vertex.x > -1 &&
-                projected_vertex.y < 1 && projected_vertex.y > -1)
-                visiblePortal = true; 
-        }
-
-        if (visiblePortal)
-            visiblePortals.insert(visiblePortals.end(), portal);
-*/
     }
 
     return visiblePortals;
@@ -245,14 +212,15 @@ void portalCulling( Cell_T * cell,
     std::vector<Portal_T *> visiblePortals = getVisiblePortals(cell, portalProgramID);
     
     for(const auto &portal: visiblePortals) {
-        if(portal->left_cell->id == cell->id) 
-            portalCulling(portal->right_cell, visitedCells, portalProgramID, cellProgramID);
+        if(portal->leftCell->id == cell->id) 
+            portalCulling(portal->rightCell, visitedCells, portalProgramID, cellProgramID);
         else
-            portalCulling(portal->left_cell, visitedCells, portalProgramID, cellProgramID);
+            portalCulling(portal->leftCell, visitedCells, portalProgramID, cellProgramID);
     }
 
     return;
 }
+
 
 int main( void )
 {
@@ -304,8 +272,10 @@ int main( void )
 
 	// enable depth test
 	glEnable(GL_DEPTH_TEST);
+
 	// accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS); 
+
 	// cull triangles which normal is not towards the camera
 	// glEnable(gl_cull_face);
 
@@ -314,108 +284,10 @@ int main( void )
 	glBindVertexArray(vertexarrayid);
 
 	// create and compile our glsl program from the shaders
-	GLuint room_programID = LoadShaders("./shaders/room.vert", "./shaders/room.frag");
-	GLuint portal_programID = LoadShaders("./shaders/portal.vert", "./shaders/portal.frag");
+	GLuint cellProgramID = LoadShaders("./shaders/room.vert", "./shaders/room.frag");
+	GLuint portalProgramID = LoadShaders("./shaders/portal.vert", "./shaders/portal.frag");
 
-	// read our .obj file
-#if 0
-	Cell_T cell_1;
-	bool res1 = loadOBJ("./scene/simple_scene_cell_1.obj", &cell_1);
-	fillObjectBuffers(&cell_1);
-    calcBoundingBox(&cell_1);
-
-	Cell_T cell_2;
-	bool res2 = loadOBJ("./scene/simple_scene_cell_2.obj", &cell_2);
-	fillObjectBuffers(&cell_2);
-    calcBoundingBox(&cell_2);
-
-	Portal_T portal_1;
-	bool res3 = loadOBJ("./scene/portal.obj", &portal_1);
-	fillObjectBuffers(&portal_1);
-    calcBoundingBox(&portal_1);
-#endif 
-
-    Cell_T cell_1;
-	bool res1 = loadOBJ("./scene/pgr_scene/pgr_room1.obj", &cell_1);
-	fillObjectBuffers(&cell_1);
-    calcBoundingBox(&cell_1);
-#if 0
-    std::cout << cell_1.bounding_box_min.x << " " << cell_1.bounding_box_min.y << " " << cell_1.bounding_box_min.y << std::endl;
-    std::cout << cell_1.bounding_box_max.x << " " << cell_1.bounding_box_max.y << " " << cell_1.bounding_box_max.y << std::endl;
-#endif
-
-    Cell_T cell_2;
-	bool res2 = loadOBJ("./scene/pgr_scene/pgr_room2.obj", &cell_2);
-	fillObjectBuffers(&cell_2);
-    calcBoundingBox(&cell_2);
-#if 0
-    std::cout << cell_2.bounding_box_min.x << " " << cell_2.bounding_box_min.y << " " << cell_2.bounding_box_min.y << std::endl;
-    std::cout << cell_2.bounding_box_max.x << " " << cell_2.bounding_box_max.y << " " << cell_2.bounding_box_max.y << std::endl;
-#endif
-
-    Cell_T cell_3;
-	loadOBJ("./scene/pgr_scene/pgr_room3.obj", &cell_3);
-	fillObjectBuffers(&cell_3);
-    calcBoundingBox(&cell_3);
-
-    Cell_T cell_4;
-	loadOBJ("./scene/pgr_scene/pgr_room4.obj", &cell_4);
-	fillObjectBuffers(&cell_4);
-    calcBoundingBox(&cell_4);
-
-    Cell_T cell_5;
-	loadOBJ("./scene/pgr_scene/pgr_room5.obj", &cell_5);
-	fillObjectBuffers(&cell_5);
-    calcBoundingBox(&cell_5);
-
-	Portal_T portal_1;
-	loadOBJ("./scene/pgr_scene/pgr_portal1.obj", &portal_1);
-	fillObjectBuffers(&portal_1);
-    calcBoundingBox(&portal_1);
-
-	Portal_T portal_2;
-	loadOBJ("./scene/pgr_scene/pgr_portal2.obj", &portal_2);
-	fillObjectBuffers(&portal_2);
-    calcBoundingBox(&portal_2);
-
-	Portal_T portal_3;
-	loadOBJ("./scene/pgr_scene/pgr_portal3.obj", &portal_3);
-	fillObjectBuffers(&portal_3);
-    calcBoundingBox(&portal_3);
-
-	Portal_T portal_4;
-	loadOBJ("./scene/pgr_scene/pgr_portal4.obj", &portal_4);
-	fillObjectBuffers(&portal_4);
-    calcBoundingBox(&portal_4);
-
-	Portal_T portal_5;
-	loadOBJ("./scene/pgr_scene/pgr_portal5.obj", &portal_5);
-	fillObjectBuffers(&portal_5);
-    calcBoundingBox(&portal_5);
-#if 0
-    std::cout << cell_5.bounding_box_min.x << " " << cell_5.bounding_box_min.y << " " << cell_5.bounding_box_min.y << std::endl;
-    std::cout << cell_5.bounding_box_max.x << " " << cell_5.bounding_box_max.y << " " << cell_5.bounding_box_max.y << std::endl;
-#endif
-
-    ///////////////////////////////////////////////////////////
-    //                   GRAPH DEFINITION                    //
-    ///////////////////////////////////////////////////////////
-#if 0 
-    Graph_T graph;
-    graph.portals.insert(graph.portals.end(), {&portal_1});
-    graph.cells.insert(graph.cells.end(), {&cell_1, &cell_2});
-    
-    makeEdge(&cell_1, &portal_1, &cell_2);
-#endif
-
-    Graph_T graph;
-    graph.cells.insert(graph.cells.end(), {&cell_1, &cell_3, &cell_4, &cell_5});
-    graph.portals.insert(graph.portals.end(), {&portal_1, &portal_3, &portal_4, &portal_5});
-    
-    makeEdge(&cell_1, &portal_1, &cell_5);
-    makeEdge(&cell_3, &portal_3, &cell_5);
-    makeEdge(&cell_3, &portal_4, &cell_5);
-    makeEdge(&cell_4, &portal_5, &cell_5);
+    Graph_T *graph = createSceneGraph("pgr_scene");
 
     bool wireframe = false;
     initText2D("textures/Holstein.DDS");
@@ -435,7 +307,7 @@ int main( void )
 		}
 
         Cell_T *active_cell = NULL;
-        active_cell = getCurrentCell(&graph);
+        active_cell = getCurrentCell(graph);
 
         GLuint NumPrimitivesQueryID;
         GLint NumPrimitivesQueryResult;
@@ -443,16 +315,16 @@ int main( void )
         glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
         if (!active_cell) {
-            useProgram("room", room_programID);
-            for(auto const& cell: graph.cells) {
+            useProgram("room", cellProgramID);
+            for(auto const& cell: graph->cells) {
 		        drawObject(cell);
             }
        
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            useProgram("portal", portal_programID);
-            for(auto const& portal: graph.portals) {
+            useProgram("portal", portalProgramID);
+            for(auto const& portal: graph->portals) {
                 drawObject(portal);
             }
 
@@ -462,41 +334,9 @@ int main( void )
             
         
         } else {
+
             std::vector<unsigned int> visitedCells; 
-            portalCulling(active_cell, visitedCells, portal_programID, room_programID);
-#if 0
-            useProgram("room", room_programID);
-            drawObject(active_cell);
-            GLuint queryID2;
-            GLint succ;
-#endif
-#if 0 
-            std::vector<Portal_T *> visible_portals = getVisiblePortals(active_cell, portal_programID);
-            for (const auto& portal: visible_portals) {
-                
-                useProgram("room", room_programID);
-
-                // TODO - Tady je taky neco spatne - ten portal se nejak spatne renderuj
-                if (portal->left_cell->id == active_cell->id) {
-                    // std::cout << "A: " << portal->left_cell->id << std::endl;
-                    drawObject(portal->right_cell);
-                } else {
-                    // std::cout << "B: " << portal->right_cell->id << std::endl;
-                    drawObject(portal->left_cell);
-                }
-                
-
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-                useProgram("portal", portal_programID);
-                drawObject(portal);
-                if (!wireframe)
-                    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-                glDisable(GL_BLEND);
-
-            }
-#endif 
+            portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID);
 
         }
 
@@ -516,12 +356,11 @@ int main( void )
 		   glfwWindowShouldClose(window) == 0 );
 
 	// cleanup vbo and shader
-	glDeleteBuffers(1, &cell_1.vertexbuffer);
-	glDeleteBuffers(1, &cell_1.uvbuffer);
-	glDeleteBuffers(1, &cell_1.normalbuffer);
-	glDeleteProgram(room_programID);
+	glDeleteProgram(cellProgramID);
+	glDeleteProgram(portalProgramID);
 	glDeleteVertexArrays(1, &vertexarrayid);
     cleanupText2D();
+    destroySceneGraph(graph);
 
 	// close opengl window and terminate glfw
 	glfwTerminate();

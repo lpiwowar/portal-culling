@@ -80,6 +80,9 @@ add_executable(portal_culling
 
 	src/shaders/room.vert
 	src/shaders/room.frag
+
+	src/scene.hpp
+	src/scene.cpp
 )
 target_link_libraries(portal_culling
 	${ALL_LIBS}

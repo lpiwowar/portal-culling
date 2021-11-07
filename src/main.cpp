@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
@@ -104,12 +105,13 @@ void drawObject(T * object) {
  *        groups": 
  *          1) "room" - set of variables required by ./shaders/room.* shaders
  *          2) "portal" - set of variables required by ./shaders/vert.* shaders 
- * @param shaderName Name of the group of shaders that should be used.
+ * @param shadersGroupName Name of the group of shaders that should be used.
  * @param programID  ID of the compiled shaders.
  */
-void useProgram(std::string shaderName, GLuint programID) {
-    if (shaderName == "room") {
-	    glUseProgram(programID);
+void useProgram(std::string shadersGroupName, GLuint programID) {
+    glUseProgram(programID);
+
+    if (shadersGroupName == "room") {
 
         GLuint matrixID = glGetUniformLocation(programID, "MVP");
 	    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
@@ -129,8 +131,7 @@ void useProgram(std::string shaderName, GLuint programID) {
 
 	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
 
-    } else if (shaderName == "portal") {
-	    glUseProgram(programID);
+    } else if (shadersGroupName == "portal") {
 
 	    GLuint matrixID = glGetUniformLocation(programID, "MVP");
 	    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
@@ -152,6 +153,16 @@ void useProgram(std::string shaderName, GLuint programID) {
     }
 }
 
+
+/**
+ * @brief Checks whether given portal is visible by the camera. First it renders
+ *        the (invisible) portal and then checks whether any fragment of the
+ *        rendered portal is visible using occlusion query.
+ * @param portal           Portal to be checked whether it is visible or not. 
+ * @param portalProgramID  ID of program to be used to render the portal.
+ * @return bool            True  when portal is visible.
+ *                         False when portal is not visible.
+ */
 bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) {
     glDepthMask(GL_FALSE);  
     
@@ -178,23 +189,44 @@ bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) {
         return false;
 }
 
-std::vector<Portal_T *> getVisiblePortals(Cell_T *active_cell, GLuint portalProgramID) {
+
+/**
+ * @brief Returns list all portals connected to activeCell that are visible.
+ * @param activeCell     Cell whose portals are to be checked.
+ * @param portalProgramID ID of program to be used to render the portal.
+ * @return std::vector<Portal_T *> 
+ */
+std::vector<Portal_T *> getVisiblePortals(Cell_T *activeCell, GLuint portalProgramID) {
     glm::mat4 projectionmatrix = getProjectionMatrix();
     glm::mat4 viewmatrix = getViewMatrix();
     glm::mat4 modelmatrix = glm::mat4(1.0);
     glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
     
     std::vector<Portal_T *> visiblePortals;
-    for (auto& portal: active_cell->portals) {
-
+    for (auto& portal: activeCell->portals) {
         if (portalIsVisible(portal, portalProgramID))
             visiblePortals.insert(visiblePortals.end(), portal);
-
     }
 
     return visiblePortals;
 }
 
+/**
+ * @brief This function does portal occlusion culling of scene represented by 
+ *        scene graph G.
+ *        
+ *        The scene graph G = (V, E) has vertices V that represent sections
+ *        of scene (usually rooms) and edges E that represent portals that 
+ *        connect scene sections (rooms). The function starts at cell and
+ *        than it traverses the scene graph to find all visible cells. The cell
+ *        is rendered when the function discoveres that it is visible.
+ *
+ * @param cell            Active cell (the camera is located inside the room).
+ * @param visitedCells    Auxiliary variable used to remember already visited 
+ *                        cells.
+ * @param portalProgramID ID of program to be used to render portals.
+ * @param cellProgramID   ID of program to be used to render cells.
+ */
 void portalCulling( Cell_T * cell, 
                     std::vector<unsigned int> &visitedCells,
                     GLuint portalProgramID,

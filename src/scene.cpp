@@ -1,26 +1,34 @@
-// Include GLEW
+/**
+ * @file    scene.cpp
+ * @author  Lukas Piwowarski
+ * @date    2021 November
+ * @brief   This file contains all functions that are connected with the scene
+ *          graph. 
+ */
+
 #include <GL/glew.h>
 
 #include "libs/objloader.hpp"
-#include "libs/graph.hpp"
+// #include "libs/graph.hpp"
 
 
 template<typename T> 
 void fillObjectBuffers(T * object) {
-    glGenBuffers(1, &object->vertexbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
+    glGenBuffers(1, &object->vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, object->vertices.size() * sizeof(glm::vec3), &object->vertices[0], GL_STATIC_DRAW);
 
-    glGenBuffers(1, &object->uvbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, object->uvbuffer);
+    glGenBuffers(1, &object->uvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->uvBuffer);
     glBufferData(GL_ARRAY_BUFFER, object->uvs.size() * sizeof(glm::vec2), &object->uvs[0], GL_STATIC_DRAW);
 
-    glGenBuffers(1, &object->normalbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, object->normalbuffer);
+    glGenBuffers(1, &object->normalBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->normalBuffer);
     glBufferData(GL_ARRAY_BUFFER, object->normals.size() * sizeof(glm::vec3), &object->normals[0], GL_STATIC_DRAW);
 	
     return;
 }
+
 
 void makeEdge(Cell_T *leftCell, Portal_T *portal, Cell_T *rightCell) {
 
@@ -30,6 +38,7 @@ void makeEdge(Cell_T *leftCell, Portal_T *portal, Cell_T *rightCell) {
     portal->rightCell = rightCell;
 
 }
+
 
 template<typename T>
 void calcBoundingBox(T * object) {
@@ -122,9 +131,9 @@ Graph_T *createSceneGraph(std::string sceneName) {
 
 void destroySceneGraph(Graph_T *graph) {
     for (auto const &cell: graph->cells) {
-	    glDeleteBuffers(1, &cell->vertexbuffer);
-	    glDeleteBuffers(1, &cell->uvbuffer);
-	    glDeleteBuffers(1, &cell->normalbuffer);
+	    glDeleteBuffers(1, &cell->vertexBuffer);
+	    glDeleteBuffers(1, &cell->uvBuffer);
+	    glDeleteBuffers(1, &cell->normalBuffer);
         delete cell;
     }
 
@@ -136,5 +145,4 @@ void destroySceneGraph(Graph_T *graph) {
 
     return;
 }
-
 

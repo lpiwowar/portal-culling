@@ -75,17 +75,17 @@ template<typename T>
 void drawObject(T * object) {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, object->vertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->vertexBuffer);
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,(void*)0);
 
     // 2nd attribute buffer : uvs
     glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, object->uvbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->uvBuffer);
     glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,(void*)0);
 
     // 3rd attribute buffer : normals
     glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, object->normalbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, object->normalBuffer);
     glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,0,(void*)0);
 
     // draw the triangles !
@@ -256,7 +256,7 @@ void portalCulling( Cell_T * cell,
 
 int main( void )
 {
-	// initialise glfw
+	/** Initialise glfw. */
 	if( !glfwInit() )
 	{
 		fprintf( stderr, "failed to initialize glfw\n" );
@@ -270,7 +270,7 @@ int main( void )
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // to make macos happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// open a window and create its opengl context
+	/** Open a window and create its opengl context. */
 	window = glfwCreateWindow( 1024, 768, "tutorial 08 - basic shading", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "failed to open glfw window. if you have an intel gpu, they are not 3.3 compatible. try the 2.1 version of the tutorials.\n" );
@@ -280,8 +280,8 @@ int main( void )
 	}
 	glfwMakeContextCurrent(window);
 
-	// initialize glew
-	glewExperimental = true; // needed for core profile
+	/** Initialize glew. */
+	glewExperimental = true; /** < needed for core profile */
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "failed to initialize glew\n");
 		getchar();
@@ -289,33 +289,33 @@ int main( void )
 		return -1;
 	}
 
-	// ensure we can capture the escape key being pressed below
+	/** Ensure we can capture the escape key being pressed below. */
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-    // hide the mouse and enable unlimited mouvement
+    /** Hide the mouse and enable unlimited mouvement. */
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
-    // set the mouse at the center of the screen
+    /** Set the mouse at the center of the screen. */
     glfwPollEvents();
     glfwSetCursorPos(window, 1024/2, 768/2);
 
-	// dark blue background
+	/** Dark blue background. */
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
-	// enable depth test
+	/** Enable depth test. */
 	glEnable(GL_DEPTH_TEST);
 
-	// accept fragment if it closer to the camera than the former one
+	/** Accept fragment if it closer to the camera than the former one. */
 	glDepthFunc(GL_LESS); 
 
-	// cull triangles which normal is not towards the camera
+	/** Cull triangles which normal is not towards the camera. */
 	// glEnable(gl_cull_face);
 
 	GLuint vertexarrayid;
 	glGenVertexArrays(1, &vertexarrayid);
 	glBindVertexArray(vertexarrayid);
 
-	// create and compile our glsl program from the shaders
+	/** Create and compile our glsl program from the shaders. */
 	GLuint cellProgramID = LoadShaders("./shaders/room.vert", "./shaders/room.frag");
 	GLuint portalProgramID = LoadShaders("./shaders/portal.vert", "./shaders/portal.frag");
 
@@ -325,7 +325,7 @@ int main( void )
     initText2D("textures/Holstein.DDS");
 	do{
 
-        // clear the screen
+        /** Clear the screen. */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		if (glfwGetKey( window, GLFW_KEY_M ) == GLFW_PRESS){
@@ -378,23 +378,23 @@ int main( void )
         std::string str_num_vertices = "# Primitives: " + std::to_string(NumPrimitivesQueryResult);
         printText2D(str_num_vertices.c_str(), 0, 0, 10);
 
-		// swap buffers
+		/** Swap buffers. */
 		glfwSwapBuffers(window);
 		glfwPollEvents();
     
 
-	} // check if the esc key was pressed or the window was closed
+	} /** Check if the esc key was pressed or the window was closed. */
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
 
-	// cleanup vbo and shader
+	/** Cleanup vbo and shader. */
 	glDeleteProgram(cellProgramID);
 	glDeleteProgram(portalProgramID);
 	glDeleteVertexArrays(1, &vertexarrayid);
     cleanupText2D();
     destroySceneGraph(graph);
 
-	// close opengl window and terminate glfw
+	/** Close opengl window and terminate glfw. */
 	glfwTerminate();
 
 	return 0;

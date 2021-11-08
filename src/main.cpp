@@ -3,6 +3,8 @@
  * @author  Lukas Piwowarski
  * @date    2021 November
  * @brief   This file contains code for Portal Occlusion Culling. 
+ * TODO - Make portalVissionCulling() return list of visible rooms and then 
+ *        use it to render overview to the scene.
  */
 
 #include <algorithm>
@@ -111,24 +113,41 @@ void drawObject(T * object) {
 void useProgram(std::string shadersGroupName, GLuint programID) {
     glUseProgram(programID);
 
-    if (shadersGroupName == "room") {
+    if (shadersGroupName == "room" || shadersGroupName == "room_overview") {
 
         GLuint matrixID = glGetUniformLocation(programID, "MVP");
 	    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
 	    GLuint modelmatrixID = glGetUniformLocation(programID, "M");
 	    GLuint lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 	    GLuint cameraID = glGetUniformLocation(programID, "CameraPosition_worldspace");
+        
+        glm::vec3 cameraPosition;
+	    glm::mat4 projectionmatrix;
+        glm::mat4 viewmatrix;
 
-	    glm::vec3 cameraPosition = computeMatricesFromInputs();
-	    glm::mat4 projectionmatrix = getProjectionMatrix();
-	    glm::mat4 viewmatrix = getViewMatrix();
+        if (shadersGroupName == "room") 
+            cameraPosition = computeMatricesFromInputs();
+        else if (shadersGroupName == "room_overview")
+            cameraPosition = glm::vec3(0,40,0);
+        
+        if (shadersGroupName == "room")
+            projectionmatrix = getProjectionMatrix();
+        else if (shadersGroupName == "room_overview") 
+            projectionmatrix = getProjectionMatrix();
+        
+        if (shadersGroupName == "room")
+            viewmatrix = getViewMatrix();
+        else if (shadersGroupName == "room_overview")
+            viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -2.0, -0.01544), glm::vec3(0,1,0));
+            //viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -0.756, -0.01544), glm::vec3(0,1,0));
+
 	    glm::mat4 modelmatrix = glm::mat4(1.0);
 	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
 
 	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
 	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
 	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
-
+        
 	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
 
     } else if (shadersGroupName == "portal") {
@@ -150,6 +169,7 @@ void useProgram(std::string shadersGroupName, GLuint programID) {
 	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
 
 	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
+
     }
 }
 
@@ -219,7 +239,7 @@ std::vector<Portal_T *> getVisiblePortals(Cell_T *activeCell, GLuint portalProgr
  *        of scene (usually rooms) and edges E that represent portals that 
  *        connect scene sections (rooms). The function starts at cell and
  *        than it traverses the scene graph to find all visible cells. The cell
- *        is rendered when the function discoveres that it is visible.
+ *        is immediately rendered when the function discoveres that it is visible.
  *
  * @param cell            Active cell (the camera is located inside the room).
  * @param visitedCells    Auxiliary variable used to remember already visited 
@@ -230,7 +250,8 @@ std::vector<Portal_T *> getVisiblePortals(Cell_T *activeCell, GLuint portalProgr
 void portalCulling( Cell_T * cell, 
                     std::vector<unsigned int> &visitedCells,
                     GLuint portalProgramID,
-                    GLuint cellProgramID)
+                    GLuint cellProgramID,
+                    std::string shadersGroupName)
 {
 
     if(std::find(visitedCells.begin(), visitedCells.end(), cell->id) != visitedCells.end())
@@ -238,24 +259,65 @@ void portalCulling( Cell_T * cell,
 
     visitedCells.insert(visitedCells.end(), {cell->id});
 
-    useProgram("room", cellProgramID);
+    useProgram(shadersGroupName, cellProgramID);
     drawObject(cell);
 
     std::vector<Portal_T *> visiblePortals = getVisiblePortals(cell, portalProgramID);
     
     for(const auto &portal: visiblePortals) {
         if(portal->leftCell->id == cell->id) 
-            portalCulling(portal->rightCell, visitedCells, portalProgramID, cellProgramID);
+            portalCulling(portal->rightCell, visitedCells, portalProgramID, cellProgramID, shadersGroupName);
         else
-            portalCulling(portal->leftCell, visitedCells, portalProgramID, cellProgramID);
+            portalCulling(portal->leftCell, visitedCells, portalProgramID, cellProgramID, shadersGroupName);
     }
 
     return;
 }
 
+void drawScene(Graph_T* graph, 
+               GLuint cellProgramID, 
+               GLuint portalProgramID, 
+               bool wireframe,
+               std::string shadersGroupName) 
+{
+
+    Cell_T *active_cell = NULL;
+    active_cell = getCurrentCell(graph);
+
+    if (!active_cell) {
+        useProgram(shadersGroupName, cellProgramID);
+        for(auto const& cell: graph->cells) {
+            drawObject(cell);
+        }
+   
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        useProgram("portal", portalProgramID);
+        for(auto const& portal: graph->portals) {
+            drawObject(portal);
+        }
+
+        if (!wireframe)
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        glDisable(GL_BLEND);
+        
+    
+    } else {
+
+        std::vector<unsigned int> visitedCells; 
+        portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID, shadersGroupName);
+
+    }
+
+    return;
+}
 
 int main( void )
 {
+    const int width = 1848;
+    const int height = 768;
+
 	/** Initialise glfw. */
 	if( !glfwInit() )
 	{
@@ -271,7 +333,7 @@ int main( void )
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/** Open a window and create its opengl context. */
-	window = glfwCreateWindow( 1024, 768, "tutorial 08 - basic shading", NULL, NULL);
+	window = glfwCreateWindow( width, height, "tutorial 08 - basic shading", NULL, NULL);
 	if( window == NULL ){
 		fprintf( stderr, "failed to open glfw window. if you have an intel gpu, they are not 3.3 compatible. try the 2.1 version of the tutorials.\n" );
 		getchar();
@@ -297,7 +359,7 @@ int main( void )
     
     /** Set the mouse at the center of the screen. */
     glfwPollEvents();
-    glfwSetCursorPos(window, 1024/2, 768/2);
+    glfwSetCursorPos(window, width/2, height/2);
 
 	/** Dark blue background. */
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -324,10 +386,16 @@ int main( void )
     bool wireframe = false;
     initText2D("textures/Holstein.DDS");
 	do{
+        
+        /** Set left viewport **/
+        glEnable(GL_SCISSOR_TEST);
+        glViewport(0, 0, width/2, height);
+        glScissor(0, 0, width/2, height);
+        glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
         /** Clear the screen. */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+	
 		if (glfwGetKey( window, GLFW_KEY_M ) == GLFW_PRESS){
 		  glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
           wireframe = true;
@@ -337,52 +405,45 @@ int main( void )
 		  glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
           wireframe = false;
 		}
-
-        Cell_T *active_cell = NULL;
-        active_cell = getCurrentCell(graph);
-
+        
+        /** Start query - counting number of rendered primitives */
         GLuint NumPrimitivesQueryID;
         GLint NumPrimitivesQueryResult;
         glGenQueries(1, &NumPrimitivesQueryID);
         glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
-        if (!active_cell) {
-            useProgram("room", cellProgramID);
-            for(auto const& cell: graph->cells) {
-		        drawObject(cell);
-            }
-       
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-            useProgram("portal", portalProgramID);
-            for(auto const& portal: graph->portals) {
-                drawObject(portal);
-            }
-
-            if (!wireframe)
-                glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-            glDisable(GL_BLEND);
-            
+        drawScene(graph, cellProgramID, portalProgramID, wireframe, "room");
         
-        } else {
+        /** End query - counting number of rendered primitives */
+        glEndQuery(GL_PRIMITIVES_GENERATED);
+        glGetQueryObjectiv(NumPrimitivesQueryID, GL_QUERY_RESULT, &NumPrimitivesQueryResult);
+        std::string str_num_vertices = "# Primitives: " + std::to_string(NumPrimitivesQueryResult);
+        printText2D(str_num_vertices.c_str(), 0, 0, 10);
+        
+        glGenQueries(1, &NumPrimitivesQueryID);
+        glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
-            std::vector<unsigned int> visitedCells; 
-            portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID);
+        /** Set right viewport */
+        glViewport((width)/2, 0, width/2, height);
+        glScissor((width)/2, 0, width/2, height);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        }
+        drawScene(graph, cellProgramID, portalProgramID, wireframe, "room_overview");
+
+        glDisable(GL_BLEND);
+        glDisable(GL_SCISSOR_TEST);
 
         glEndQuery(GL_PRIMITIVES_GENERATED);
         glGetQueryObjectiv(NumPrimitivesQueryID, GL_QUERY_RESULT, &NumPrimitivesQueryResult);
-
-        std::string str_num_vertices = "# Primitives: " + std::to_string(NumPrimitivesQueryResult);
-        printText2D(str_num_vertices.c_str(), 0, 0, 10);
+        std::string str_num_vertices2 = "# Primitives: " + std::to_string(NumPrimitivesQueryResult);
+        printText2D(str_num_vertices2.c_str(), 0, 0, 10);
+        
 
 		/** Swap buffers. */
 		glfwSwapBuffers(window);
 		glfwPollEvents();
     
-
 	} /** Check if the esc key was pressed or the window was closed. */
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );

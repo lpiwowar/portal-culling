@@ -3,8 +3,6 @@
  * @author  Lukas Piwowarski
  * @date    2021 November
  * @brief   This file contains code for Portal Occlusion Culling. 
- * TODO - Make portalVissionCulling() return list of visible rooms and then 
- *        use it to render overview to the scene.
  */
 
 #include <algorithm>
@@ -106,40 +104,58 @@ void drawObject(T * object) {
  *        the group. The function supports two "shader 
  *        groups": 
  *          1) "room" - set of variables required by ./shaders/room.* shaders
- *          2) "portal" - set of variables required by ./shaders/vert.* shaders 
+ *          2) "room_overview_red" - set of variables required by ./shaders/room.*
+ *                                   shaders (renders red rooms, with static 
+ *                                   camera)
+ *          3) "room_overview_green" - set of variables required by ./shaders/room.*
+ *                                     shaders (renders green rooms, with static
+ *                                     camera)
+ *          4) "portal" - set of variables required by ./shaders/vert.* shaders 
  * @param shadersGroupName Name of the group of shaders that should be used.
  * @param programID  ID of the compiled shaders.
  */
 void useProgram(std::string shadersGroupName, GLuint programID) {
     glUseProgram(programID);
 
-    if (shadersGroupName == "room" || shadersGroupName == "room_overview") {
+    if (shadersGroupName == "room" || shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red" ) {
 
         GLuint matrixID = glGetUniformLocation(programID, "MVP");
 	    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
 	    GLuint modelmatrixID = glGetUniformLocation(programID, "M");
 	    GLuint lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 	    GLuint cameraID = glGetUniformLocation(programID, "CameraPosition_worldspace");
+	    GLuint roomColorID = glGetUniformLocation(programID, "roomColor");
         
         glm::vec3 cameraPosition;
 	    glm::mat4 projectionmatrix;
         glm::mat4 viewmatrix;
+        glm::vec3 roomColor;
+        
+        if (shadersGroupName == "room") {
+            roomColor = glm::vec3(0.118,0.565,1);  
+        } else if (shadersGroupName == "room_overview_green") {
+            roomColor = glm::vec3(0.0f,1.0f,0.0f);  
+        } else if (shadersGroupName == "room_overview_red") {
+            roomColor = glm::vec3(1.0f,0.0f,0.0f);  
+        }
 
-        if (shadersGroupName == "room") 
+        if (shadersGroupName == "room") {
             cameraPosition = computeMatricesFromInputs();
-        else if (shadersGroupName == "room_overview")
-            cameraPosition = glm::vec3(0,40,0);
+        } else if (shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red" ) {
+            cameraPosition = glm::vec3(-5,60,10);
+        }
         
-        if (shadersGroupName == "room")
+        if (shadersGroupName == "room") {
             projectionmatrix = getProjectionMatrix();
-        else if (shadersGroupName == "room_overview") 
+        } else if (shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red" ) {
             projectionmatrix = getProjectionMatrix();
+        }
         
-        if (shadersGroupName == "room")
+        if (shadersGroupName == "room") {
             viewmatrix = getViewMatrix();
-        else if (shadersGroupName == "room_overview")
-            viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -2.0, -0.01544), glm::vec3(0,1,0));
-            //viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -0.756, -0.01544), glm::vec3(0,1,0));
+        } else if (shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red" ) {
+            viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -2.0, 0.0f), glm::vec3(0,1,0));
+        }
 
 	    glm::mat4 modelmatrix = glm::mat4(1.0);
 	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
@@ -149,6 +165,7 @@ void useProgram(std::string shadersGroupName, GLuint programID) {
 	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
         
 	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
+	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
 
     } else if (shadersGroupName == "portal") {
 
@@ -241,21 +258,22 @@ std::vector<Portal_T *> getVisiblePortals(Cell_T *activeCell, GLuint portalProgr
  *        than it traverses the scene graph to find all visible cells. The cell
  *        is immediately rendered when the function discoveres that it is visible.
  *
- * @param cell            Active cell (the camera is located inside the room).
- * @param visitedCells    Auxiliary variable used to remember already visited 
- *                        cells.
- * @param portalProgramID ID of program to be used to render portals.
- * @param cellProgramID   ID of program to be used to render cells.
+ * @param cell              Active cell (the camera is located inside the room).
+ * @param visitedCells      Auxiliary variable used to remember already visited 
+ *                          cells.
+ * @param portalProgramID   ID of program to be used to render portals.
+ * @param cellProgramID     ID of program to be used to render cells.
+ * @return std::vector<int> List of IDs of visible rooms.
  */
-void portalCulling( Cell_T * cell, 
-                    std::vector<unsigned int> &visitedCells,
-                    GLuint portalProgramID,
-                    GLuint cellProgramID,
-                    std::string shadersGroupName)
+std::vector<unsigned int> portalCulling(Cell_T * cell, 
+                                        std::vector<unsigned int> &visitedCells,
+                                        GLuint portalProgramID,
+                                        GLuint cellProgramID,
+                                        std::string shadersGroupName)
 {
 
     if(std::find(visitedCells.begin(), visitedCells.end(), cell->id) != visitedCells.end())
-        return;
+        return visitedCells;
 
     visitedCells.insert(visitedCells.end(), {cell->id});
 
@@ -266,51 +284,12 @@ void portalCulling( Cell_T * cell,
     
     for(const auto &portal: visiblePortals) {
         if(portal->leftCell->id == cell->id) 
-            portalCulling(portal->rightCell, visitedCells, portalProgramID, cellProgramID, shadersGroupName);
+            visitedCells = portalCulling(portal->rightCell, visitedCells, portalProgramID, cellProgramID, shadersGroupName);
         else
-            portalCulling(portal->leftCell, visitedCells, portalProgramID, cellProgramID, shadersGroupName);
+            visitedCells = portalCulling(portal->leftCell, visitedCells, portalProgramID, cellProgramID, shadersGroupName);
     }
 
-    return;
-}
-
-void drawScene(Graph_T* graph, 
-               GLuint cellProgramID, 
-               GLuint portalProgramID, 
-               bool wireframe,
-               std::string shadersGroupName) 
-{
-
-    Cell_T *active_cell = NULL;
-    active_cell = getCurrentCell(graph);
-
-    if (!active_cell) {
-        useProgram(shadersGroupName, cellProgramID);
-        for(auto const& cell: graph->cells) {
-            drawObject(cell);
-        }
-   
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        useProgram("portal", portalProgramID);
-        for(auto const& portal: graph->portals) {
-            drawObject(portal);
-        }
-
-        if (!wireframe)
-            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-        glDisable(GL_BLEND);
-        
-    
-    } else {
-
-        std::vector<unsigned int> visitedCells; 
-        portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID, shadersGroupName);
-
-    }
-
-    return;
+    return visitedCells;
 }
 
 int main( void )
@@ -412,16 +391,40 @@ int main( void )
         glGenQueries(1, &NumPrimitivesQueryID);
         glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
-        drawScene(graph, cellProgramID, portalProgramID, wireframe, "room");
+        Cell_T *active_cell = NULL;
+        active_cell = getCurrentCell(graph);
+        std::vector<unsigned int> visitedCells; 
+
+        if (!active_cell) {
+            useProgram("room", cellProgramID);
+            for(auto const& cell: graph->cells) {
+                drawObject(cell);
+            }
+   
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            useProgram("portal", portalProgramID);
+            for(auto const& portal: graph->portals) {
+                drawObject(portal);
+            }
+
+            if (!wireframe)
+                glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+            glDisable(GL_BLEND);
+        
+    
+        } else {
+
+            visitedCells = portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID, "room");
+
+        }
         
         /** End query - counting number of rendered primitives */
         glEndQuery(GL_PRIMITIVES_GENERATED);
         glGetQueryObjectiv(NumPrimitivesQueryID, GL_QUERY_RESULT, &NumPrimitivesQueryResult);
         std::string str_num_vertices = "# Primitives: " + std::to_string(NumPrimitivesQueryResult);
         printText2D(str_num_vertices.c_str(), 0, 0, 10);
-        
-        glGenQueries(1, &NumPrimitivesQueryID);
-        glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
         /** Set right viewport */
         glViewport((width)/2, 0, width/2, height);
@@ -429,16 +432,38 @@ int main( void )
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        drawScene(graph, cellProgramID, portalProgramID, wireframe, "room_overview");
+        if (!active_cell) {
 
+            useProgram("room_overview_red", cellProgramID);
+            for (const auto& cell: graph->cells) {
+                drawObject(cell);
+            }
+               
+        } else {
+            
+            /** Print green rooms - visible ones */
+            useProgram("room_overview_green", cellProgramID);
+            for(auto const& cellID: visitedCells) {
+                auto lambdaCheckID = [cellID](Cell_T *cell){ return cell->id == cellID; };
+                std::vector<Cell_T*>::iterator it = std::find_if(graph->cells.begin(), graph->cells.end(), lambdaCheckID);
+                if (it != graph->cells.end()) {
+                    drawObject(*it);
+                }
+            }
+            
+            /** Print red rooms - visible ones */
+            useProgram("room_overview_red", cellProgramID);
+            for(auto const& cellID: visitedCells) {
+                for(auto const& cell: graph->cells) {
+                    if (std::find(visitedCells.begin(), visitedCells.end(), cell->id) == visitedCells.end()) {
+                        drawObject(cell);
+                    }
+                }
+            }
+        }
+ 
         glDisable(GL_BLEND);
         glDisable(GL_SCISSOR_TEST);
-
-        glEndQuery(GL_PRIMITIVES_GENERATED);
-        glGetQueryObjectiv(NumPrimitivesQueryID, GL_QUERY_RESULT, &NumPrimitivesQueryResult);
-        std::string str_num_vertices2 = "# Primitives: " + std::to_string(NumPrimitivesQueryResult);
-        printText2D(str_num_vertices2.c_str(), 0, 0, 10);
-        
 
 		/** Swap buffers. */
 		glfwSwapBuffers(window);

@@ -14,6 +14,7 @@ out vec3 color;
 uniform sampler2D myTextureSampler;
 uniform mat4 MV;
 uniform vec3 LightPosition_worldspace;
+uniform vec3 roomColor;
 
 void main(){
 
@@ -25,7 +26,8 @@ void main(){
 	// Material properties
 	// vec3 MaterialDiffuseColor = texture( myTextureSampler, UV ).rgb;
 
-	vec3 MaterialDiffuseColor = vec3(0.118,0.565,1);
+	// vec3 MaterialDiffuseColor = vec3(0.118,0.565,1);
+	vec3 MaterialDiffuseColor = roomColor;
 	vec3 MaterialAmbientColor = vec3(0.4,0.4,0.4) * MaterialDiffuseColor;
 	vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
 

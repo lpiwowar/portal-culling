@@ -4,6 +4,7 @@ project (Tutorials)
 
 find_package(OpenGL REQUIRED)
 
+add_definitions ( -DCMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}" )
 
 if( CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR )
     message( FATAL_ERROR "Please select another Build Directory ! (and give it a clever name, like bin_Visual2012_64bits/)" )
@@ -84,9 +85,11 @@ add_executable(portal_culling
 	src/scene.hpp
 	src/scene.cpp
 )
+
 target_link_libraries(portal_culling
 	${ALL_LIBS}
 )
+
 # Xcode and Visual working directories
 set_target_properties(portal_culling PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/portal_culling/")
 create_target_launcher(portal_culling WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/portal_culling/")

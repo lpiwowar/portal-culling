@@ -11,6 +11,7 @@ using namespace glm;
 #include "texture.hpp"
 
 #include "text2D.hpp"
+#include "../config.h"
 #include <iostream>
 
 unsigned int Text2DTextureID;
@@ -29,7 +30,7 @@ void initText2D(const char * texturePath){
 	glGenBuffers(1, &Text2DUVBufferID);
 
 	// Initialize Shader
-	Text2DShaderID = LoadShaders( "./shaders/TextVertexShader.vertexshader", "./shaders/TextVertexShader.fragmentshader" );
+	Text2DShaderID = LoadShaders(SOURCE_DIR "/src/shaders/TextVertexShader.vertexshader", SOURCE_DIR "/src/shaders/TextVertexShader.fragmentshader");
 
 	// Initialize uniforms' IDs
 	Text2DUniformID = glGetUniformLocation( Text2DShaderID, "myTextureSampler" );

@@ -5,6 +5,7 @@
  * @brief   This file contains code for Portal Occlusion Culling. 
  */
 
+
 #include <algorithm>
 #include <stdio.h>
 
@@ -27,6 +28,7 @@ using namespace glm;
 #include "libs/objloader.hpp"
 #include "libs/text2D.hpp"
 #include "scene.hpp"
+#include "config.h"
 
 /**
  * @brief Function that checks whether given @param coordinates are inside 
@@ -100,7 +102,7 @@ void drawObject(T * object) {
 
 /**
  * @brief Prepare variables that are necessary for a group of shaders (vertex
- *        shader, fragment shader, ...) and activate program that represents 
+ *        shader, fragment shader, ...) and activate program that represents
  *        the group. The function supports two "shader 
  *        groups": 
  *          1) "room" - set of variables required by ./shaders/room.* shaders
@@ -364,13 +366,13 @@ int main( void )
 	glBindVertexArray(vertexarrayid);
 
 	/** Create and compile our glsl program from the shaders. */
-	GLuint cellProgramID = LoadShaders("./shaders/room.vert", "./shaders/room.frag");
-	GLuint portalProgramID = LoadShaders("./shaders/portal.vert", "./shaders/portal.frag");
+	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/src/shaders/room.vert", SOURCE_DIR "/src/shaders/room.frag");
+	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/src/shaders/portal.vert", SOURCE_DIR "/src/shaders/portal.frag");
 
     Graph_T *graph = createSceneGraph("pgr_scene2");
 
     bool wireframe = false;
-    initText2D("textures/Holstein.DDS");
+    initText2D( SOURCE_DIR "/src/textures/Holstein.DDS");
 	do{
         
         /** Set left viewport **/

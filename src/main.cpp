@@ -164,7 +164,12 @@ void useProgram(std::string shadersGroupName, GLuint programID) {
 	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
 	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
         
-	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
+        if (shadersGroupName == "room") {
+            glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
+        } else if (shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red") {
+            glUniform3f(lightID, 10, 20, 10);
+        }
+
 	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
 
     } else if (shadersGroupName == "portal") {
@@ -201,6 +206,7 @@ void useProgram(std::string shadersGroupName, GLuint programID) {
  *                         False when portal is not visible.
  */
 bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) {
+
     glDepthMask(GL_FALSE);  
     
     glEnable(GL_BLEND);
@@ -220,10 +226,11 @@ bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) {
     glDisable(GL_BLEND);
 
     glDepthMask(GL_TRUE);  
-    if (anyFragRendered)
+    if (anyFragRendered) {
         return true;
-    else 
+    } else {
         return false;
+    }
 }
 
 
@@ -360,7 +367,7 @@ int main( void )
 	GLuint cellProgramID = LoadShaders("./shaders/room.vert", "./shaders/room.frag");
 	GLuint portalProgramID = LoadShaders("./shaders/portal.vert", "./shaders/portal.frag");
 
-    Graph_T *graph = createSceneGraph("pgr_scene");
+    Graph_T *graph = createSceneGraph("pgr_scene2");
 
     bool wireframe = false;
     initText2D("textures/Holstein.DDS");
@@ -415,7 +422,6 @@ int main( void )
         
     
         } else {
-
             visitedCells = portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID, "room");
 
         }
@@ -440,7 +446,6 @@ int main( void )
             }
                
         } else {
-            
             /** Print green rooms - visible ones */
             useProgram("room_overview_green", cellProgramID);
             for(auto const& cellID: visitedCells) {
@@ -450,8 +455,8 @@ int main( void )
                     drawObject(*it);
                 }
             }
-            
-            /** Print red rooms - visible ones */
+
+            /** Print red rooms - unvisible ones */
             useProgram("room_overview_red", cellProgramID);
             for(auto const& cellID: visitedCells) {
                 for(auto const& cell: graph->cells) {
@@ -459,7 +464,7 @@ int main( void )
                         drawObject(cell);
                     }
                 }
-            }
+            } 
         }
  
         glDisable(GL_BLEND);

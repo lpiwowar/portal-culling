@@ -123,6 +123,86 @@ Graph_T *createSceneGraph(std::string sceneName) {
         makeEdge(cell_4, portal_5, cell_5);
         
         return graph;
+    } else if (sceneName == "pgr_scene2") {
+
+        Cell_T *cell_1 = new Cell_T;
+        loadOBJ("./scenes/pgr_scene2/room1.obj", cell_1);
+        fillObjectBuffers(cell_1);
+        calcBoundingBox(cell_1);
+
+        Cell_T *cell_2 = new Cell_T;
+        loadOBJ("./scenes/pgr_scene2/room2.obj", cell_2);
+        fillObjectBuffers(cell_2);
+        calcBoundingBox(cell_2);
+
+        Cell_T *cell_3 = new Cell_T;
+        loadOBJ("./scenes/pgr_scene2/room3.obj", cell_3);
+        fillObjectBuffers(cell_3);
+        calcBoundingBox(cell_3);
+
+        Cell_T *cell_4 = new Cell_T;
+        loadOBJ("./scenes/pgr_scene2/room4.obj", cell_4);
+        fillObjectBuffers(cell_4);
+        calcBoundingBox(cell_4);
+
+        Portal_T *portal_1 = new Portal_T;
+        loadOBJ("./scenes/pgr_scene2/portal1.obj", portal_1);
+        fillObjectBuffers(portal_1);
+        calcBoundingBox(portal_1);
+        // portal_1->portal_name = "portal1";
+
+        Portal_T *portal_2 = new Portal_T;
+        loadOBJ("./scenes/pgr_scene2/portal2.obj", portal_2);
+        fillObjectBuffers(portal_2);
+        calcBoundingBox(portal_2);
+        // portal_2->portal_name = "portal2";
+
+        Portal_T *portal_3 = new Portal_T;
+        loadOBJ("./scenes/pgr_scene2/portal3.obj", portal_3);
+        fillObjectBuffers(portal_3);
+        calcBoundingBox(portal_3);
+        // portal_3->portal_name = "portal3";
+
+        Portal_T *portal_4 = new Portal_T;
+        loadOBJ("./scenes/pgr_scene2/portal4.obj", portal_4);
+        fillObjectBuffers(portal_4);
+        calcBoundingBox(portal_4);
+        // portal_4->portal_name = "portal4";
+
+        Portal_T *portal_5 = new Portal_T;
+        loadOBJ("./scenes/pgr_scene2/portal5.obj", portal_5);
+        fillObjectBuffers(portal_5);
+        calcBoundingBox(portal_5);
+        // portal_5->portal_name = "portal5";
+
+        Portal_T *portal_6 = new Portal_T;
+        loadOBJ("./scenes/pgr_scene2/portal6.obj", portal_6);
+        fillObjectBuffers(portal_6);
+        calcBoundingBox(portal_6);
+        // portal_6->portal_name = "portal6";
+
+        Portal_T *portal_7 = new Portal_T;
+        loadOBJ("./scenes/pgr_scene2/portal7.obj", portal_7);
+        fillObjectBuffers(portal_7);
+        calcBoundingBox(portal_7);
+        // portal_7->portal_name = "portal7";
+
+        Graph_T *graph = new Graph_T;
+        graph->cells.insert(graph->cells.end(), {cell_1, cell_2, cell_3, cell_4});
+        graph->portals.insert(graph->portals.end(), {portal_1, portal_2, portal_3, portal_4, portal_5, portal_6, portal_7});
+
+        makeEdge(cell_1, portal_1, cell_2);
+        makeEdge(cell_1, portal_7, cell_4);
+
+        makeEdge(cell_2, portal_2, cell_3);
+        makeEdge(cell_2, portal_3, cell_3);
+        makeEdge(cell_2, portal_5, cell_4);
+
+        makeEdge(cell_3, portal_4, cell_4);
+
+        makeEdge(cell_4, portal_6, cell_1);
+
+        return graph;
     }
 
     return nullptr;

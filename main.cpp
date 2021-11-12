@@ -23,12 +23,12 @@ GLFWwindow* window;
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
-#include "libs/shader.hpp"
-#include "libs/controls.hpp"
-#include "libs/objloader.hpp"
-#include "libs/text2D.hpp"
-#include "scene.hpp"
-#include "config.h"
+#include "include/shader.hpp"
+#include "include/controls.hpp"
+#include "include/objloader.hpp"
+#include "include/text2D.hpp"
+#include "include/scene.hpp"
+#include "include/config.hpp"
 
 /**
  * @brief Function that checks whether given @param coordinates are inside 
@@ -366,13 +366,13 @@ int main( void )
 	glBindVertexArray(vertexarrayid);
 
 	/** Create and compile our glsl program from the shaders. */
-	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/src/shaders/room.vert", SOURCE_DIR "/src/shaders/room.frag");
-	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/src/shaders/portal.vert", SOURCE_DIR "/src/shaders/portal.frag");
+	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/shaders/room.vert", SOURCE_DIR "/shaders/room.frag");
+	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/shaders/portal.vert", SOURCE_DIR "/shaders/portal.frag");
 
     Graph_T *graph = createSceneGraph("pgr_scene2");
 
     bool wireframe = false;
-    initText2D( SOURCE_DIR "/src/textures/Holstein.DDS");
+    initText2D( SOURCE_DIR "/textures/Holstein.DDS");
 	do{
         
         /** Set left viewport **/

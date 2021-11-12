@@ -57,33 +57,27 @@ add_definitions(
 
 # Tutorial 7
 add_executable(portal_culling
-	src/main.cpp
+	main.cpp
 
-	src/libs/shader.cpp
-	src/libs/shader.hpp
-
-	src/libs/texture.cpp
-	src/libs/texture.hpp
-
-	src/libs/controls.cpp
-	src/libs/controls.hpp
-
-	src/libs/objloader.cpp
-	src/libs/objloader.hpp
-
-	src/libs/graph.hpp
-
-	src/libs/text2D.cpp
-	src/libs/text2D.hpp
-
-	src/shaders/portal.vert
-	src/shaders/portal.frag
-
-	src/shaders/room.vert
-	src/shaders/room.frag
-
-	src/scene.hpp
+	src/shader.cpp
 	src/scene.cpp
+	src/texture.cpp
+	src/controls.cpp
+	src/objloader.cpp
+	src/text2D.cpp
+
+	shaders/portal.vert
+	shaders/portal.frag
+	shaders/room.vert
+	shaders/room.frag
+
+	include/shader.hpp
+	include/texture.hpp
+	include/controls.hpp
+	include/objloader.hpp
+	include/graph.hpp
+	include/text2D.hpp
+	include/scene.hpp
 )
 
 target_link_libraries(portal_culling
@@ -101,7 +95,7 @@ if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 
 add_custom_command(
    TARGET portal_culling POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/portal_culling${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/portal_culling${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
 

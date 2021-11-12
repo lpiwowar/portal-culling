@@ -2,7 +2,7 @@
 #define OBJLOADER_H
 
 #include <GL/gl.h>
-#include "../scene.hpp"
+#include "scene.hpp"
 
 template<typename T>
 bool loadOBJ(const char * path, T * object);

@@ -1,5 +1,6 @@
 #!/bin/bash
 
-cd ../build
+cd ./build
+cmake ..
 make
 cd -

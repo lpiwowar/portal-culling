@@ -66,10 +66,11 @@ add_executable(portal_culling
 	src/objloader.cpp
 	src/text2D.cpp
 
-	shaders/portal.vert
-	shaders/portal.frag
-	shaders/room.vert
-	shaders/room.frag
+	shaders/vertexShaders/portal.vert
+	shaders/vertexShaders/cell.vert
+
+	shaders/fragmentShaders/portal.frag
+	shaders/fragmentShaders/cell.frag
 
 	include/shader.hpp
 	include/texture.hpp

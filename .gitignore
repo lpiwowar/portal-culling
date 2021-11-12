@@ -12,3 +12,5 @@ OpenGL-tutorial_v*
 **.mtl
 .DS_Store
 portal_culling
+
+!.gitkeep

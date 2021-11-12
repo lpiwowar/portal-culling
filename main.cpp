@@ -366,8 +366,8 @@ int main( void )
 	glBindVertexArray(vertexarrayid);
 
 	/** Create and compile our glsl program from the shaders. */
-	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/shaders/room.vert", SOURCE_DIR "/shaders/room.frag");
-	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/shaders/portal.vert", SOURCE_DIR "/shaders/portal.frag");
+	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/shaders/vertexShaders/cell.vert", SOURCE_DIR "/shaders/fragmentShaders/cell.frag");
+	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/shaders/vertexShaders/portal.vert", SOURCE_DIR "/shaders/fragmentShaders/portal.frag");
 
     Graph_T *graph = createSceneGraph("pgr_scene2");
 

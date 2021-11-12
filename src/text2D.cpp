@@ -30,7 +30,8 @@ void initText2D(const char * texturePath){
 	glGenBuffers(1, &Text2DUVBufferID);
 
 	// Initialize Shader
-	Text2DShaderID = LoadShaders(SOURCE_DIR "/shaders/TextVertexShader.vertexshader", SOURCE_DIR "/shaders/TextVertexShader.fragmentshader");
+	Text2DShaderID = LoadShaders(SOURCE_DIR "/shaders/vertexShaders/text.vert", 
+								 SOURCE_DIR "/shaders/fragmentShaders/text.frag");
 
 	// Initialize uniforms' IDs
 	Text2DUniformID = glGetUniformLocation( Text2DShaderID, "myTextureSampler" );

@@ -64,8 +64,8 @@ struct Portal_T {
     glm::vec3 boundingBoxMin;        /** < Min coordinates of bounding box.  */
     glm::vec3 boundingBoxMax;        /** < Max coordinates of bounding box.  */
 
-    Cell_T *leftCell;                /** < Pointer to 1st cell.              */
-    Cell_T *rightCell;               /** < Pointer to 2nd cell.              */
+    Cell_T *leftCell = nullptr;                /** < Pointer to 1st cell.              */
+    Cell_T *rightCell = nullptr;               /** < Pointer to 2nd cell.              */
 };
 
 /**

@@ -37,7 +37,8 @@ using namespace glm;
  * @param object      Object with the bounding box. 
  * @return void
  */
-bool isInsideObject(glm::vec3 coordinates, Cell_T * object) {
+bool isInsideObject(glm::vec3 coordinates, Cell_T * object) 
+{
     if (coordinates.x < object->boundingBoxMax.x &&
         coordinates.y < object->boundingBoxMax.y &&
         coordinates.z < object->boundingBoxMax.z &&
@@ -55,13 +56,14 @@ bool isInsideObject(glm::vec3 coordinates, Cell_T * object) {
  * @param graph Graph that contains candidate active cells.
  * @return Cell_T* 
  */
-Cell_T *getCurrentCell(Graph_T *graph) {
+Cell_T *getCurrentCell(Graph_T *graph) 
+{
     glm::vec3 cameraPosition = computeMatricesFromInputs();
 
-    for(auto const& cell: graph->cells) {
-        if(isInsideObject(cameraPosition, cell)) {
+    for(auto const& cell: graph->cells) 
+    {
+        if(isInsideObject(cameraPosition, cell)) 
             return cell;
-        } 
     }
 
     return nullptr;
@@ -74,7 +76,8 @@ Cell_T *getCurrentCell(Graph_T *graph) {
  * @return void
  */
 template<typename T>
-void drawObject(T * object) {
+void drawObject(T * object) 
+{
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, object->vertexBuffer);
@@ -116,48 +119,23 @@ void drawObject(T * object) {
  * @param shadersGroupName Name of the group of shaders that should be used.
  * @param programID  ID of the compiled shaders.
  */
-void useProgram(std::string shadersGroupName, GLuint programID) {
+void useProgram(std::string shadersGroupName, GLuint programID) 
+{
     glUseProgram(programID);
 
-    if (shadersGroupName == "room" || shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red" ) {
+    GLuint matrixID = glGetUniformLocation(programID, "MVP");
+    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
+    GLuint modelmatrixID = glGetUniformLocation(programID, "M");
+    GLuint lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+    GLuint cameraID = glGetUniformLocation(programID, "CameraPosition_worldspace");
+    GLuint roomColorID = glGetUniformLocation(programID, "roomColor");
 
-        GLuint matrixID = glGetUniformLocation(programID, "MVP");
-	    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
-	    GLuint modelmatrixID = glGetUniformLocation(programID, "M");
-	    GLuint lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
-	    GLuint cameraID = glGetUniformLocation(programID, "CameraPosition_worldspace");
-	    GLuint roomColorID = glGetUniformLocation(programID, "roomColor");
-        
-        glm::vec3 cameraPosition;
-	    glm::mat4 projectionmatrix;
-        glm::mat4 viewmatrix;
-        glm::vec3 roomColor;
-        
-        if (shadersGroupName == "room") {
-            roomColor = glm::vec3(0.118,0.565,1);  
-        } else if (shadersGroupName == "room_overview_green") {
-            roomColor = glm::vec3(0.0f,1.0f,0.0f);  
-        } else if (shadersGroupName == "room_overview_red") {
-            roomColor = glm::vec3(1.0f,0.0f,0.0f);  
-        }
-
-        if (shadersGroupName == "room") {
-            cameraPosition = computeMatricesFromInputs();
-        } else if (shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red" ) {
-            cameraPosition = glm::vec3(-5,60,10);
-        }
-        
-        if (shadersGroupName == "room") {
-            projectionmatrix = getProjectionMatrix();
-        } else if (shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red" ) {
-            projectionmatrix = getProjectionMatrix();
-        }
-        
-        if (shadersGroupName == "room") {
-            viewmatrix = getViewMatrix();
-        } else if (shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red" ) {
-            viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -2.0, 0.0f), glm::vec3(0,1,0));
-        }
+    if (shadersGroupName == "room") 
+    {
+        glm::vec3 roomColor = glm::vec3(0.118,0.565,1);  
+        glm::vec3 cameraPosition = computeMatricesFromInputs();
+        glm::mat4 projectionmatrix = getProjectionMatrix();
+        glm::mat4 viewmatrix = getViewMatrix();
 
 	    glm::mat4 modelmatrix = glm::mat4(1.0);
 	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
@@ -165,23 +143,55 @@ void useProgram(std::string shadersGroupName, GLuint programID) {
 	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
 	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
 	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
-        
-        if (shadersGroupName == "room") {
-            glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
-        } else if (shadersGroupName == "room_overview_green" || shadersGroupName == "room_overview_red") {
-            glUniform3f(lightID, 10, 20, 10);
-        }
 
+        glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
 	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
+    } 
+    else if (shadersGroupName == "room_overview_green") 
+    {
+        glm::vec3 roomColor = glm::vec3(0.0f,1.0f,0.0f);  
+        glm::vec3 cameraPosition = computeMatricesFromInputs();
+        cameraPosition.y = 120;
+        cameraPosition.x -= 20;
+        glm::mat4 projectionmatrix = getProjectionMatrix();
+        glm::mat4 viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -2.0, 0.0f), glm::vec3(0,1,0));
 
-    } else if (shadersGroupName == "portal") {
+	    glm::mat4 modelmatrix = glm::mat4(1.0);
+	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
 
-	    GLuint matrixID = glGetUniformLocation(programID, "MVP");
-	    GLuint viewmatrixID = glGetUniformLocation(programID, "V");
-	    GLuint modelmatrixID = glGetUniformLocation(programID, "M");
-	    GLuint lightID = glGetUniformLocation(programID, "LightPosition_worldspace");
-	    GLuint cameraID = glGetUniformLocation(programID, "CameraPosition_worldspace");
+	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
+	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
+	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
 
+
+        glm::vec3 cameraPosition2;
+        cameraPosition2 = computeMatricesFromInputs();
+        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 5, cameraPosition2.z);
+	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
+    } 
+    else if (shadersGroupName == "room_overview_red") 
+    {
+        glm::vec3 roomColor = glm::vec3(1.0f,0.0f,0.0f);  
+        glm::vec3 cameraPosition = computeMatricesFromInputs();
+        cameraPosition.y = 120;
+        cameraPosition.x -= 20;
+        glm::mat4 projectionmatrix = getProjectionMatrix();
+        glm::mat4 viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -2.0, 0.0f), glm::vec3(0,1,0));
+
+	    glm::mat4 modelmatrix = glm::mat4(1.0);
+	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
+
+	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
+	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
+	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
+
+        glm::vec3 cameraPosition2;
+        cameraPosition2 = computeMatricesFromInputs();
+        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 5, cameraPosition2.z);
+	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
+    }
+    else if (shadersGroupName == "portal") 
+    {
 	    glm::vec3 cameraPosition = computeMatricesFromInputs();
 	    glm::mat4 projectionmatrix = getProjectionMatrix();
 	    glm::mat4 viewmatrix = getViewMatrix();
@@ -193,7 +203,6 @@ void useProgram(std::string shadersGroupName, GLuint programID) {
 	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
 
 	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
-
     }
 }
 
@@ -207,8 +216,8 @@ void useProgram(std::string shadersGroupName, GLuint programID) {
  * @return bool            True  when portal is visible.
  *                         False when portal is not visible.
  */
-bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) {
-
+bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) 
+{
     glDepthMask(GL_FALSE);  
     
     glEnable(GL_BLEND);
@@ -242,14 +251,16 @@ bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) {
  * @param portalProgramID ID of program to be used to render the portal.
  * @return std::vector<Portal_T *> 
  */
-std::vector<Portal_T *> getVisiblePortals(Cell_T *activeCell, GLuint portalProgramID) {
+std::vector<Portal_T *> getVisiblePortals(Cell_T *activeCell, GLuint portalProgramID) 
+{
     glm::mat4 projectionmatrix = getProjectionMatrix();
     glm::mat4 viewmatrix = getViewMatrix();
     glm::mat4 modelmatrix = glm::mat4(1.0);
     glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
     
     std::vector<Portal_T *> visiblePortals;
-    for (auto& portal: activeCell->portals) {
+    for (auto& portal: activeCell->portals) 
+    {
         if (portalIsVisible(portal, portalProgramID))
             visiblePortals.insert(visiblePortals.end(), portal);
     }
@@ -299,6 +310,52 @@ std::vector<unsigned int> portalCulling(Cell_T * cell,
     }
 
     return visitedCells;
+}
+
+void drawNeighboringCells(Cell_T& cell, int depth, std::vector<uint>& visitedCellsID) {
+    if(depth < 0)
+        return;
+
+    if(std::find(visitedCellsID.begin(), visitedCellsID.end(), cell.id) == visitedCellsID.end()) 
+    {
+        std::cout << "DRAW: " << cell.id << std::endl;
+        drawObject(&cell);
+        visitedCellsID.insert(visitedCellsID.end(), {cell.id});
+    }
+    else 
+    {
+        std::cout << "NOT DRAW" << cell.id << std::endl;
+    }
+
+    for(auto& portal: cell.portals) 
+    {
+        Cell_T* cell2Draw;
+        if (portal->leftCell->id != cell.id)
+            cell2Draw = portal->leftCell;
+        else
+            cell2Draw = portal->rightCell;
+
+        drawNeighboringCells(*cell2Draw, depth-1, visitedCellsID);
+    }
+/*
+    if(std::find(visitedCellsID.end(), visitedCellsID.end(), cell.id) != visitedCellsID.end()))
+        visitedCellsID.insert(visitedCellsID.end(), {cell.id});
+
+    for(auto& portal: cell.portals) 
+    {
+        Cell_T* cell2Draw;
+        if (portal->leftCell->id != cell.id)
+            cell2Draw = portal->leftCell;
+        else
+            cell2Draw = portal->rightCell;
+
+        if(std::find(visitedCellsID.begin(), visitedCellsID.end(), cell2Draw->id) != visitedCellsID.end()) {
+            drawObject(cell2Draw);
+        }
+
+        drawNeighboringCells(*cell2Draw, depth-1, visitedCellsID);
+    }
+*/
 }
 
 int main( void )
@@ -369,12 +426,11 @@ int main( void )
 	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/src/shaders/room.vert", SOURCE_DIR "/src/shaders/room.frag");
 	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/src/shaders/portal.vert", SOURCE_DIR "/src/shaders/portal.frag");
 
-    Graph_T *graph = createSceneGraph("pgr_scene2");
+    Graph_T *graph = createSceneGraph("auto_generated");
 
     bool wireframe = false;
     initText2D( SOURCE_DIR "/src/textures/Holstein.DDS");
 	do{
-        
         /** Set left viewport **/
         glEnable(GL_SCISSOR_TEST);
         glViewport(0, 0, width/2, height);
@@ -384,12 +440,14 @@ int main( void )
         /** Clear the screen. */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-		if (glfwGetKey( window, GLFW_KEY_M ) == GLFW_PRESS){
+		if (glfwGetKey( window, GLFW_KEY_M ) == GLFW_PRESS)
+        {
 		  glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
           wireframe = true;
 		}
 
-		if (glfwGetKey( window, GLFW_KEY_N ) == GLFW_PRESS){
+		if (glfwGetKey( window, GLFW_KEY_N ) == GLFW_PRESS)
+        {
 		  glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
           wireframe = false;
 		}
@@ -400,32 +458,35 @@ int main( void )
         glGenQueries(1, &NumPrimitivesQueryID);
         glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
+
         Cell_T *active_cell = NULL;
         active_cell = getCurrentCell(graph);
         std::vector<unsigned int> visitedCells; 
 
-        if (!active_cell) {
+        if (!active_cell) 
+        {
             useProgram("room", cellProgramID);
-            for(auto const& cell: graph->cells) {
+            for(auto const& cell: graph->cells) 
+            {
                 drawObject(cell);
             }
-   
+
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
             useProgram("portal", portalProgramID);
-            for(auto const& portal: graph->portals) {
+            for(auto const& portal: graph->portals) 
+            {
                 drawObject(portal);
             }
 
             if (!wireframe)
                 glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
             glDisable(GL_BLEND);
-        
-    
-        } else {
+        } 
+        else 
+        {
             visitedCells = portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID, "room");
-
         }
         
         /** End query - counting number of rendered primitives */
@@ -440,35 +501,48 @@ int main( void )
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (!active_cell) {
-
+        if (!active_cell) 
+        {
             useProgram("room_overview_red", cellProgramID);
-            for (const auto& cell: graph->cells) {
+            for (const auto& cell: graph->cells) 
+            {
                 drawObject(cell);
             }
-               
-        } else {
+        } 
+        else 
+        {
             /** Print green rooms - visible ones */
             useProgram("room_overview_green", cellProgramID);
-            for(auto const& cellID: visitedCells) {
+            for(auto const& cellID: visitedCells) 
+            {
                 auto lambdaCheckID = [cellID](Cell_T *cell){ return cell->id == cellID; };
                 std::vector<Cell_T*>::iterator it = std::find_if(graph->cells.begin(), graph->cells.end(), lambdaCheckID);
-                if (it != graph->cells.end()) {
+                if (it != graph->cells.end()) 
+                {
                     drawObject(*it);
                 }
             }
 
             /** Print red rooms - unvisible ones */
             useProgram("room_overview_red", cellProgramID);
-            for(auto const& cellID: visitedCells) {
-                for(auto const& cell: graph->cells) {
-                    if (std::find(visitedCells.begin(), visitedCells.end(), cell->id) == visitedCells.end()) {
+
+            drawNeighboringCells(*active_cell, 2, visitedCells);
+            
+#if 0
+            for(auto const& cellID: visitedCells) 
+            {
+                for(auto const& cell: graph->cells) 
+                {
+                    if (std::find(visitedCells.begin(), visitedCells.end(), cell->id) == visitedCells.end()) 
+                    {
                         drawObject(cell);
                     }
                 }
-            } 
+            }
+             
+#endif
         }
- 
+
         glDisable(GL_BLEND);
         glDisable(GL_SCISSOR_TEST);
 

@@ -5,7 +5,7 @@
  * @brief   This file contains all functions that are connected with the scene
  *          graph. 
  */
-
+#include <iostream>
 #include <GL/glew.h>
 
 #include "config.h"
@@ -31,22 +31,31 @@ void fillObjectBuffers(T * object) {
 }
 
 
-void makeEdge(Cell_T *leftCell, Portal_T *portal, Cell_T *rightCell) {
+void makeEdge(Cell_T* leftCell, Portal_T* portal, Cell_T* rightCell) 
+{
+    assert(portal != nullptr);
 
-    leftCell->portals.insert(leftCell->portals.end(), {portal});
-    rightCell->portals.insert(rightCell->portals.end(), {portal});
-    portal->leftCell = leftCell;
-    portal->rightCell = rightCell;
+    if(leftCell) 
+    {
+        leftCell->portals.insert(leftCell->portals.end(), {portal});
+        portal->leftCell = leftCell;
+    }
 
+    if(rightCell) 
+    {
+        rightCell->portals.insert(rightCell->portals.end(), {portal});
+        portal->rightCell = rightCell;
+    }
 }
 
 
 template<typename T>
-void calcBoundingBox(T * object) {
+void calcBoundingBox(T* object, glm::vec3 offset=glm::vec3(0,0,0)) {
     glm::vec3 min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
     glm::vec3 max = glm::vec3(FLT_MIN, FLT_MIN, FLT_MIN);
 
-    for(glm::vec3 it : object->vertices) {
+    for(glm::vec3& it : object->vertices) {
+        it = it + offset;
         if ( it.x < min.x ) min.x = it.x;
         if ( it.y < min.y ) min.y = it.y;
         if ( it.z < min.z ) min.z = it.z;
@@ -61,8 +70,99 @@ void calcBoundingBox(T * object) {
     return;
 }
 
+Portal_T* getSceneSubblock(Graph_T& graph, glm::vec3 offset, Portal_T* connectPortal=nullptr)
+{
+    Cell_T *cell_1 = new Cell_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/room1.obj", cell_1);
+    calcBoundingBox(cell_1, offset);
+    fillObjectBuffers(cell_1);
 
-Graph_T *createSceneGraph(std::string sceneName) {
+    Cell_T *cell_2 = new Cell_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/room2.obj", cell_2);
+    calcBoundingBox(cell_2, offset);
+    fillObjectBuffers(cell_2);
+
+    Cell_T *cell_3 = new Cell_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/room3.obj", cell_3);
+    calcBoundingBox(cell_3, offset);
+    fillObjectBuffers(cell_3);
+
+    Cell_T *cell_4 = new Cell_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/room4.obj", cell_4);
+    calcBoundingBox(cell_4, offset);
+    fillObjectBuffers(cell_4);
+
+    Portal_T *portal_1 = new Portal_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/portal1.obj", portal_1);
+    calcBoundingBox(portal_1, offset);
+    fillObjectBuffers(portal_1);
+
+    Portal_T *portal_2 = new Portal_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/portal2.obj", portal_2);
+    calcBoundingBox(portal_2, offset);
+    fillObjectBuffers(portal_2);
+
+    Portal_T *portal_3 = new Portal_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/portal3.obj", portal_3);
+    calcBoundingBox(portal_3, offset);
+    fillObjectBuffers(portal_3);
+
+    Portal_T *portal_4 = new Portal_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/portal4.obj", portal_4);
+    calcBoundingBox(portal_4, offset);
+    fillObjectBuffers(portal_4);
+
+    Portal_T *portal_5 = new Portal_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/portal5.obj", portal_5);
+    calcBoundingBox(portal_5, offset);
+    fillObjectBuffers(portal_5);
+
+    Portal_T *portal_6 = new Portal_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/portal6.obj", portal_6);
+    calcBoundingBox(portal_6, offset);
+    fillObjectBuffers(portal_6);
+
+    Portal_T *portal_7 = new Portal_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/portal7.obj", portal_7);
+    calcBoundingBox(portal_7, offset);
+    fillObjectBuffers(portal_7);
+    // portal_7->portal_name = "portal7";
+
+    Portal_T *portal_8 = new Portal_T;
+    loadOBJ(SOURCE_DIR "/scenes/auto_generated/portal8.obj", portal_8);
+    calcBoundingBox(portal_8, offset);
+    fillObjectBuffers(portal_8);
+
+    // Graph_T *graph = new Graph_T;
+    graph.cells.insert(graph.cells.end(), {cell_1, cell_2, cell_3, cell_4});
+    graph.portals.insert(graph.portals.end(), {portal_1, portal_2, portal_3, portal_4, portal_5, portal_6, portal_7, portal_8});
+
+    makeEdge(cell_1, portal_1, cell_2);
+    makeEdge(cell_1, portal_7, cell_4);
+
+    makeEdge(cell_2, portal_2, cell_3);
+    makeEdge(cell_2, portal_3, cell_3);
+    makeEdge(cell_2, portal_5, cell_4);
+
+    makeEdge(cell_3, portal_4, cell_4);
+
+    makeEdge(cell_4, portal_6, cell_1);
+
+    makeEdge(cell_4, portal_8, nullptr);
+
+    if (connectPortal) 
+    {
+        if(!connectPortal->leftCell)
+            connectPortal->leftCell = cell_2;
+        else
+            connectPortal->rightCell = cell_2;
+    }
+
+    return portal_8;
+}
+
+Graph_T *createSceneGraph(std::string sceneName) 
+{
     if (sceneName == "pgr_scene") {
         Cell_T *cell_1 = new Cell_T;
         loadOBJ("./scenes/pgr_scene/pgr_room1.obj", cell_1);
@@ -124,9 +224,9 @@ Graph_T *createSceneGraph(std::string sceneName) {
         makeEdge(cell_4, portal_5, cell_5);
         
         return graph;
-    } else if (sceneName == "pgr_scene2") {
-        
-
+    } 
+    else if (sceneName == "pgr_scene2") 
+    {
         Cell_T *cell_1 = new Cell_T;
         loadOBJ(SOURCE_DIR "/src/scenes/pgr_scene2/room1.obj", cell_1);
         fillObjectBuffers(cell_1);
@@ -151,43 +251,37 @@ Graph_T *createSceneGraph(std::string sceneName) {
         loadOBJ(SOURCE_DIR "/src/scenes/pgr_scene2/portal1.obj", portal_1);
         fillObjectBuffers(portal_1);
         calcBoundingBox(portal_1);
-        // portal_1->portal_name = "portal1";
 
         Portal_T *portal_2 = new Portal_T;
         loadOBJ(SOURCE_DIR "/src/scenes/pgr_scene2/portal2.obj", portal_2);
         fillObjectBuffers(portal_2);
         calcBoundingBox(portal_2);
-        // portal_2->portal_name = "portal2";
 
         Portal_T *portal_3 = new Portal_T;
         loadOBJ(SOURCE_DIR "/src/scenes/pgr_scene2/portal3.obj", portal_3);
         fillObjectBuffers(portal_3);
         calcBoundingBox(portal_3);
-        // portal_3->portal_name = "portal3";
 
         Portal_T *portal_4 = new Portal_T;
         loadOBJ(SOURCE_DIR "/src/scenes/pgr_scene2/portal4.obj", portal_4);
         fillObjectBuffers(portal_4);
         calcBoundingBox(portal_4);
-        // portal_4->portal_name = "portal4";
 
         Portal_T *portal_5 = new Portal_T;
         loadOBJ(SOURCE_DIR "/src/scenes/pgr_scene2/portal5.obj", portal_5);
         fillObjectBuffers(portal_5);
         calcBoundingBox(portal_5);
-        // portal_5->portal_name = "portal5";
 
         Portal_T *portal_6 = new Portal_T;
         loadOBJ(SOURCE_DIR "/src/scenes/pgr_scene2/portal6.obj", portal_6);
         fillObjectBuffers(portal_6);
         calcBoundingBox(portal_6);
-        // portal_6->portal_name = "portal6";
 
         Portal_T *portal_7 = new Portal_T;
         loadOBJ(SOURCE_DIR "/src/scenes/pgr_scene2/portal7.obj", portal_7);
         fillObjectBuffers(portal_7);
         calcBoundingBox(portal_7);
-        // portal_7->portal_name = "portal7";
+
 
         Graph_T *graph = new Graph_T;
         graph->cells.insert(graph->cells.end(), {cell_1, cell_2, cell_3, cell_4});
@@ -204,7 +298,59 @@ Graph_T *createSceneGraph(std::string sceneName) {
 
         makeEdge(cell_4, portal_6, cell_1);
 
+
         return graph;
+    } 
+    else if (sceneName == "auto_generated") 
+    {
+        Graph_T* graph = new Graph_T;
+        Portal_T* connectPortal = nullptr;
+        for(int i = 0; i < 3; i++) 
+        {
+            connectPortal = getSceneSubblock(*graph, glm::vec3(0,0,37.125*i), connectPortal);
+        }
+
+        return graph;
+#if 0
+        Cell_T *cell_1 = new Cell_T;
+        loadOBJ(SOURCE_DIR "/scenes/pgr_scene2/room1.obj", cell_1);
+        fillObjectBuffers(cell_1);
+        calcBoundingBox(cell_1);
+
+        Cell_T *cell_2 = new Cell_T;
+        loadOBJ(SOURCE_DIR "/scenes/pgr_scene2/room1.obj", cell_2);
+
+        std::cout << cell_2->vertices.at(2).x << std::endl;
+        for (auto& vertex: cell_2->vertices)
+        {
+            vertex = vertex + glm::vec3(10, 0, 0);
+        }
+
+        std::cout << cell_2->vertices.at(2).x << std::endl;
+
+        fillObjectBuffers(cell_2);
+        calcBoundingBox(cell_2);
+        Graph_T *graph = new Graph_T;
+        for (int i = 0; i < 100000; i++) 
+        {
+            Cell_T *cell = new Cell_T;
+            loadOBJ(SOURCE_DIR "/scenes/pgr_scene2/room1.obj", cell);
+
+            for (auto& vertex: cell->vertices)
+            {
+                vertex = vertex + glm::vec3(10 * i, 0, 0);
+            }
+            fillObjectBuffers(cell);
+            calcBoundingBox(cell);
+            graph->cells.insert(graph->cells.end(), {cell});
+        }
+#endif
+#if 0
+        Graph_T *graph = new Graph_T;
+        graph->cells.insert(graph->cells.end(), {cell_1, cell_2});
+        graph->portals.insert(graph->portals.end(), {});
+        return graph;
+#endif
     }
 
     return nullptr;

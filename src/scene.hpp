@@ -13,6 +13,7 @@
 #ifndef SCENEHPP
 #define SCENEHPP
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -24,6 +25,16 @@ using namespace glm;
 typedef struct Cell_T Cell_T;
 typedef struct Portal_T Portal_T;
 typedef struct Graph_T Graph_T;
+
+typedef std::pair<std::string, Cell_T*> CellMapElem_T;
+typedef std::map<std::string, Cell_T*> CellMap_T;
+typedef std::pair<std::string, Portal_T*> PortalMapElem_T;
+typedef std::map<std::string, Portal_T*> PortalMap_T;
+
+typedef struct connectPortals {
+	Portal_T* portalRight = nullptr;
+	Portal_T* portalWindow = nullptr;
+} connectPortals_T;
 
 /**
  * @brief Represents cells in portal occlussion culling (vertices in the scene

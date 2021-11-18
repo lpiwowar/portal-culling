@@ -23,12 +23,12 @@ GLFWwindow* window;
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
-#include "libs/shader.hpp"
-#include "libs/controls.hpp"
-#include "libs/objloader.hpp"
-#include "libs/text2D.hpp"
-#include "scene.hpp"
-#include "config.h"
+#include "../include/shader.hpp"
+#include "../include/controls.hpp"
+#include "../include/objloader.hpp"
+#include "../include/text2D.hpp"
+#include "../include/scene.hpp"
+#include "../include/config.h"
 
 /**
  * @brief Function that checks whether given @param coordinates are inside 
@@ -402,13 +402,13 @@ int main( void )
 	glBindVertexArray(vertexarrayid);
 
 	/** Create and compile our glsl program from the shaders. */
-	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/src/shaders/room.vert", SOURCE_DIR "/src/shaders/room.frag");
-	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/src/shaders/portal.vert", SOURCE_DIR "/src/shaders/portal.frag");
+	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/shaders/vertexShaders/cell.vert", SOURCE_DIR "/shaders/fragmentShaders/cell.frag");
+	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/shaders/vertexShaders/portal.vert", SOURCE_DIR "/shaders/fragmentShaders/portal.frag");
 
     Graph_T *graph = createSceneGraph("auto_generated");
     // Graph_T *graph = createSceneGraph("pgr_scene2");
 
-    initText2D( SOURCE_DIR "/src/textures/Holstein.DDS");
+    initText2D( SOURCE_DIR "/res/textures/Holstein.DDS");
     bool portalCullingMode = true;
     double lastTime = glfwGetTime();
     int nbFrames = 0;
@@ -416,9 +416,7 @@ int main( void )
 	do{
         double currentTime = glfwGetTime();
         nbFrames++;
-        if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
-            // printf and reset timer
-            printf("%d FPS\n", nbFrames);
+        if ( currentTime - lastTime >= 1.0 ){
             FPS = nbFrames;
             nbFrames = 0; 
             lastTime += 1.0;

@@ -7,11 +7,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
-#include "shader.hpp"
-#include "texture.hpp"
+#include "../include/shader.hpp"
+#include "../include/texture.hpp"
 
-#include "text2D.hpp"
-#include "../config.h"
+#include "../include/text2D.hpp"
+#include "../include/config.h"
 #include <iostream>
 
 unsigned int Text2DTextureID;
@@ -30,7 +30,7 @@ void initText2D(const char * texturePath){
 	glGenBuffers(1, &Text2DUVBufferID);
 
 	// Initialize Shader
-	Text2DShaderID = LoadShaders(SOURCE_DIR "/src/shaders/TextVertexShader.vertexshader", SOURCE_DIR "/src/shaders/TextVertexShader.fragmentshader");
+	Text2DShaderID = LoadShaders(SOURCE_DIR "/shaders/vertexShaders/text.vert", SOURCE_DIR "/shaders/fragmentShaders/text.frag");
 
 	// Initialize uniforms' IDs
 	Text2DUniformID = glGetUniformLocation( Text2DShaderID, "myTextureSampler" );

@@ -30,6 +30,7 @@ using namespace glm;
 #include "../include/scene.hpp"
 #include "../include/config.h"
 
+
 /**
  * @brief Function that checks whether given @param coordinates are inside 
  *        bounding box of given @param object.
@@ -197,7 +198,28 @@ void useProgram(std::string shadersGroupName, GLuint programID)
         glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 5, cameraPosition2.z);
 	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
     }
-    else if (shadersGroupName == "portal") 
+    else if (shadersGroupName == "portal_overview") 
+    {
+        glm::vec3 roomColor = glm::vec3(0.0f,1.0f,0.0f);  
+        glm::vec3 cameraPosition = computeMatricesFromInputs();
+        cameraPosition.y = 120;
+        cameraPosition.x -= 20;
+        glm::mat4 projectionmatrix = getProjectionMatrix();
+        glm::mat4 viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -2.0, 0.0f), glm::vec3(0,1,0));
+
+	    glm::mat4 modelmatrix = glm::mat4(1.0);
+	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
+
+	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
+	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
+	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
+
+        glm::vec3 cameraPosition2;
+        cameraPosition2 = computeMatricesFromInputs();
+        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 5, cameraPosition2.z);
+	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
+    }
+    else if(shadersGroupName == "portal")
     {
 	    glm::vec3 cameraPosition = computeMatricesFromInputs();
 	    glm::mat4 projectionmatrix = getProjectionMatrix();
@@ -227,7 +249,8 @@ bool portalIsVisible(Portal_T *portal, GLuint portalProgramID)
 {
 
     glDepthMask(GL_FALSE);  
-     
+    glDisable(GL_CULL_FACE);  
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -242,6 +265,7 @@ bool portalIsVisible(Portal_T *portal, GLuint portalProgramID)
     glEndQuery(GL_ANY_SAMPLES_PASSED);
     glGetQueryObjectiv(queryID, GL_QUERY_RESULT, &anyFragRendered);
 
+    glEnable(GL_CULL_FACE);  
     glDisable(GL_BLEND);
 
     glDepthMask(GL_TRUE);  
@@ -251,7 +275,6 @@ bool portalIsVisible(Portal_T *portal, GLuint portalProgramID)
     } else {
         return false;
     }
-
 }
 
 
@@ -321,7 +344,12 @@ std::vector<unsigned int> portalCulling(Cell_T * cell,
     return visitedCells;
 }
 
-void drawNeighboringCells(Cell_T& cell, int depth, std::vector<uint>& visitedCellsID, GLuint cellProgramID) {
+void drawNeighboringCells(Cell_T& cell, 
+                          int depth, 
+                          std::vector<uint>& visitedCellsID, 
+                          GLuint cellProgramID,
+                          std::vector<Cell_T*>& outVisitedCells) 
+{
     if(depth < 0)
         return;
 
@@ -329,6 +357,13 @@ void drawNeighboringCells(Cell_T& cell, int depth, std::vector<uint>& visitedCel
     {
         drawObject(&cell, cellProgramID);
         visitedCellsID.insert(visitedCellsID.end(), {cell.id});
+    }
+
+    int cellID = cell.id;
+    auto lambdaCheckID = [cellID](Cell_T *cell){ return cell->id == cellID; };
+    if(std::find_if(outVisitedCells.begin(), outVisitedCells.end(), lambdaCheckID) == outVisitedCells.end())
+    {
+        outVisitedCells.insert(outVisitedCells.end(), {&cell});
     }
 
     for(auto& portal: cell.portals) 
@@ -339,8 +374,22 @@ void drawNeighboringCells(Cell_T& cell, int depth, std::vector<uint>& visitedCel
         else
             cell2Draw = portal->rightCell;
 
-        drawNeighboringCells(*cell2Draw, depth-1, visitedCellsID, cellProgramID);
+        drawNeighboringCells(*cell2Draw, depth-1, visitedCellsID, cellProgramID, outVisitedCells);
     }
+}
+
+void drawPortals(std::vector<Cell_T*> cells, GLuint portalProgramID)
+{
+    useProgram("portals", portalProgramID);
+    glDisable(GL_CULL_FACE);
+    for(const auto& cell: cells)
+    {
+        for(const auto& portal: cell->portals)
+        {
+            drawObject(portal, portalProgramID);
+        }
+    }
+    glEnable(GL_CULL_FACE);
 }
 
 int main( void )
@@ -401,7 +450,7 @@ int main( void )
 	glDepthFunc(GL_LESS); 
 
 	/** Cull triangles which normal is not towards the camera. */
-	// glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 
 	GLuint vertexarrayid;
 	glGenVertexArrays(1, &vertexarrayid);
@@ -414,7 +463,8 @@ int main( void )
     Graph_T *graph = createSceneGraph("auto_generated");
     // Graph_T *graph = createSceneGraph("pgr_scene2");
 
-    initText2D( SOURCE_DIR "/res/textures/Holstein.DDS");
+
+    initText2D(SOURCE_DIR "/res/textures/Holstein.DDS");
     bool portalCullingMode = true;
     double lastTime = glfwGetTime();
     int nbFrames = 0;
@@ -456,30 +506,30 @@ int main( void )
         active_cell = getCurrentCell(graph);
         std::vector<unsigned int> visitedCells; 
 
-        //if (!active_cell || !portalCullingMode) 
-        //{
+        if (!active_cell || !portalCullingMode) 
+        {
             useProgram("room", cellProgramID);
             for(auto const& cell: graph->cells) 
             {
                 drawObject(cell, cellProgramID);
             }
 
-            // glEnable(GL_BLEND);
-            // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            // useProgram("portal", portalProgramID);
-            // for(auto const& portal: graph->portals) 
-            // {
-                // drawObject(portal, portalProgramID);
-            // }
+            useProgram("portal", portalProgramID);
+            for(auto const& portal: graph->portals) 
+            {
+                drawObject(portal, portalProgramID);
+            }
 
-            // glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-            // glDisable(GL_BLEND);
-        // } 
-        // else 
-        // {
-            // visitedCells = portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID, "room");
-        // }
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+            glDisable(GL_BLEND);
+        } 
+        else 
+        {
+            visitedCells = portalCulling(active_cell, visitedCells, portalProgramID, cellProgramID, "room");
+        }
         
         /** End query - counting number of rendered primitives */
         glEndQuery(GL_PRIMITIVES_GENERATED);
@@ -492,7 +542,7 @@ int main( void )
         glScissor((width)/2, 0, width/2, height);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-#if 0
+
         if (!active_cell) 
         {
             useProgram("room_overview_red", cellProgramID);
@@ -521,12 +571,16 @@ int main( void )
             else
                 useProgram("room_overview_green", cellProgramID);
 
-            drawNeighboringCells(*active_cell, 5, visitedCells, cellProgramID);
+            std::vector<Cell_T*> outVisitedCells;
+            drawNeighboringCells(*active_cell, 5, visitedCells, cellProgramID, outVisitedCells);
+
+           useProgram("portal_overview", portalProgramID);
+           drawPortals(outVisitedCells, portalProgramID);
         }
 
         glDisable(GL_BLEND);
         glDisable(GL_SCISSOR_TEST);
-#endif 
+
 		/** Swap buffers. */
 		glfwSwapBuffers(window);
 		glfwPollEvents();

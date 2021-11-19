@@ -18,7 +18,7 @@ uniform vec3 LightPosition_worldspace;
 
 void main(){
 
-    color = vec4(1.0f,1.0f,0.0f,0.01f);
+    color = vec4(1.0f,1.0f,0.0f,0.0f);
     //color = vec3(0.5f,0.5f,0.5f);
 
 }

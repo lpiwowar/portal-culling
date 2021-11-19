@@ -325,7 +325,7 @@ Graph_T *createSceneGraph(std::string sceneName)
         for(int i = 0; i < 6000; i++) 
         {
             getSceneSubblock(graph, 
-                             glm::vec3(0,0,37.125*i), 
+                             glm::vec3(0,0,37*i), 
                              &connectPortals,
                              cells,
                              portals);

@@ -43,9 +43,9 @@ typedef struct connectPortals {
 struct Cell_T {
     unsigned int id;                 /** < Unique identifier of the cell.    */
 
-	std::vector<glm::vec3> vertices; /** < Vertices of the object.           */
-	std::vector<glm::vec2> uvs;      /** < UV coordinates.                   */
-	std::vector<glm::vec3> normals;  /** < Normals of the vertices.          */
+	std::vector<glm::vec3>* vertices; /** < Vertices of the object.           */
+	std::vector<glm::vec2>* uvs;      /** < UV coordinates.                   */
+	std::vector<glm::vec3>* normals;  /** < Normals of the vertices.          */
 
 	GLuint vertexBuffer;             /** < ID of vertex buffer.              */
 	GLuint uvBuffer;                 /** < ID of buffer with UV coordinates. */
@@ -55,6 +55,8 @@ struct Cell_T {
     glm::vec3 boundingBoxMax;        /** < Max coordinates of bounding box.  */
 
     std::vector<Portal_T *> portals; /** < Portals associated with the cell. */
+
+	glm::vec3 translationVector = glm::vec3(0,0,0);     /** < Position of the cell in the space */
 };
 
 /**
@@ -64,19 +66,21 @@ struct Cell_T {
 struct Portal_T {
     unsigned int id;                 /** < Unique identifier of the cell.    */
 
-	std::vector<glm::vec3> vertices; /** < Vertices of the object.           */
-	std::vector<glm::vec2> uvs;      /** < UV coordinates.                   */
-	std::vector<glm::vec3> normals;  /** < Normals of the vertices.          */
+	std::vector<glm::vec3>* vertices; /** < Vertices of the object.           */
+	std::vector<glm::vec2>* uvs;      /** < UV coordinates.                   */
+	std::vector<glm::vec3>* normals;  /** < Normals of the vertices.          */
 
 	GLuint vertexBuffer;             /** < ID of vertex buffer.              */
 	GLuint uvBuffer;                 /** < ID of buffer with UV coordinates. */
 	GLuint normalBuffer;             /** < ID of buffer with normals.        */
-
+	
     glm::vec3 boundingBoxMin;        /** < Min coordinates of bounding box.  */
     glm::vec3 boundingBoxMax;        /** < Max coordinates of bounding box.  */
 
-    Cell_T *leftCell = nullptr;                /** < Pointer to 1st cell.              */
-    Cell_T *rightCell = nullptr;               /** < Pointer to 2nd cell.              */
+    Cell_T *leftCell = nullptr;      /** < Pointer to 1st cell.              */
+    Cell_T *rightCell = nullptr;     /** < Pointer to 2nd cell.              */
+
+	glm::vec3 translationVector = glm::vec3(0,0,0);     /** < Position of the cell in the space */
 };
 
 /**

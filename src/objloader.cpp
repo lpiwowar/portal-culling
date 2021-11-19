@@ -31,9 +31,9 @@ bool loadOBJ(const char * path, T * object) {
 	std::vector<glm::vec2> temp_uvs;
 	std::vector<glm::vec3> temp_normals;
 
-	std::vector<glm::vec3> out_vertices; 
-	std::vector<glm::vec2> out_uvs;
-	std::vector<glm::vec3> out_normals;
+	std::vector<glm::vec3>* out_vertices = new std::vector<glm::vec3>; 
+	std::vector<glm::vec2>* out_uvs = new std::vector<glm::vec2>;
+	std::vector<glm::vec3>* out_normals = new std::vector<glm::vec3>;
 
 	FILE * file = fopen(path, "r");
 	if( file == NULL ){
@@ -105,9 +105,9 @@ bool loadOBJ(const char * path, T * object) {
 		glm::vec3 normal = temp_normals[ normalIndex-1 ];
 		
 		// Put the attributes in buffers
-		out_vertices.push_back(vertex);
-		out_uvs     .push_back(uv);
-		out_normals .push_back(normal);
+		out_vertices->push_back(vertex);
+		out_uvs     ->push_back(uv);
+		out_normals ->push_back(normal);
 	
 	}
 	fclose(file);

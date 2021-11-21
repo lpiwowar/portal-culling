@@ -38,7 +38,8 @@ using namespace glm;
  * @param object      Object with the bounding box. 
  * @return void
  */
-bool isInsideObject(glm::vec3 coordinates, Cell_T * object) 
+ template<typename T>
+bool isInsideObject(glm::vec3 coordinates, T* object) 
 {
     if (coordinates.x < object->boundingBoxMax.x &&
         coordinates.y < object->boundingBoxMax.y &&
@@ -77,7 +78,7 @@ Cell_T *getCurrentCell(Graph_T *graph)
  * @return void
  */
 template<typename T>
-void drawObject(T * object, GLuint programID) 
+void drawObject(T* object, GLuint programID) 
 {
     // 1rst attribute buffer : vertices
     glEnableVertexAttribArray(0);
@@ -140,7 +141,8 @@ void useProgram(std::string shadersGroupName, GLuint programID)
 
     if (shadersGroupName == "room") 
     {
-        glm::vec3 roomColor = glm::vec3(0.118,0.565,1);  
+        // glm::vec3 roomColor = glm::vec3(0.118,0.565,1);  
+        glm::vec3 roomColor = glm::vec3(0.0204,0.355,0.51);  
         glm::vec3 cameraPosition = computeMatricesFromInputs();
         glm::mat4 projectionmatrix = getProjectionMatrix();
         glm::mat4 viewmatrix = getViewMatrix();
@@ -174,7 +176,7 @@ void useProgram(std::string shadersGroupName, GLuint programID)
 
         glm::vec3 cameraPosition2;
         cameraPosition2 = computeMatricesFromInputs();
-        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 5, cameraPosition2.z);
+        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 10, cameraPosition2.z);
 	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
     } 
     else if (shadersGroupName == "room_overview_red") 
@@ -195,7 +197,7 @@ void useProgram(std::string shadersGroupName, GLuint programID)
 
         glm::vec3 cameraPosition2;
         cameraPosition2 = computeMatricesFromInputs();
-        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 5, cameraPosition2.z);
+        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 10, cameraPosition2.z);
 	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
     }
     else if (shadersGroupName == "portal_overview") 
@@ -216,7 +218,7 @@ void useProgram(std::string shadersGroupName, GLuint programID)
 
         glm::vec3 cameraPosition2;
         cameraPosition2 = computeMatricesFromInputs();
-        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 5, cameraPosition2.z);
+        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 10, cameraPosition2.z);
 	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
     }
     else if(shadersGroupName == "portal")
@@ -233,6 +235,27 @@ void useProgram(std::string shadersGroupName, GLuint programID)
 
 	    glUniform3f(lightID, cameraPosition.x, cameraPosition.y + 5, cameraPosition.z);
     }
+    else if(shadersGroupName == "cube")
+    {
+        glm::vec3 roomColor = glm::vec3(0.0f,0.0f,1.0f);  
+        glm::vec3 cameraPosition = computeMatricesFromInputs();
+        cameraPosition.y = 120;
+        cameraPosition.x -= 20;
+        glm::mat4 projectionmatrix = getProjectionMatrix();
+        glm::mat4 viewmatrix = glm::lookAt(cameraPosition,cameraPosition+glm::vec3(0.653, -2.0, 0.0f), glm::vec3(0,1,0));
+
+	    glm::mat4 modelmatrix = glm::mat4(1.0);
+	    glm::mat4 mvp = projectionmatrix * viewmatrix * modelmatrix;
+
+	    glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
+	    glUniformMatrix4fv(modelmatrixID, 1, GL_FALSE, &modelmatrix[0][0]);
+	    glUniformMatrix4fv(viewmatrixID, 1, GL_FALSE, &viewmatrix[0][0]);
+
+        glm::vec3 cameraPosition2;
+        cameraPosition2 = computeMatricesFromInputs();
+        glUniform3f(lightID, cameraPosition2.x, cameraPosition2.y + 10, cameraPosition2.z);
+	    glUniform3f(roomColorID, roomColor.x, roomColor.y, roomColor.z);
+    }
 }
 
 
@@ -247,7 +270,7 @@ void useProgram(std::string shadersGroupName, GLuint programID)
  */
 bool portalIsVisible(Portal_T *portal, GLuint portalProgramID) 
 {
-
+    static int i = 0;
     glDepthMask(GL_FALSE);  
     // glDisable(GL_CULL_FACE);  
 
@@ -414,7 +437,7 @@ Cell_T* getActiveCell(Cell_T* activeCell, Graph_T* graph)
         if(isInsideObject(cameraPosition, neighboringCell))
             return neighboringCell;
     }
-    
+
     return getCurrentCell(graph);
 }
 
@@ -486,7 +509,7 @@ int main( void )
 	GLuint cellProgramID = LoadShaders(SOURCE_DIR "/shaders/vertexShaders/cell.vert", SOURCE_DIR "/shaders/fragmentShaders/cell.frag");
 	GLuint portalProgramID = LoadShaders(SOURCE_DIR "/shaders/vertexShaders/portal.vert", SOURCE_DIR "/shaders/fragmentShaders/portal.frag");
 
-    Graph_T *graph = createSceneGraph("auto_generated");
+    Graph_T *graph = createSceneGraph("auto_generated3");
     // Graph_T *graph = createSceneGraph("pgr_scene2");
 
 
@@ -496,6 +519,8 @@ int main( void )
     double lastTime = glfwGetTime();
     int nbFrames = 0;
     int FPS = 0;
+    Cube_T* cube = getCube();
+
 	do{
         double currentTime = glfwGetTime();
         nbFrames++;
@@ -509,6 +534,16 @@ int main( void )
             portalCullingMode = true;
 		else if (glfwGetKey( window, GLFW_KEY_O ) == GLFW_PRESS)
             portalCullingMode = false;
+        else if (glfwGetKey( window, GLFW_KEY_1) == GLFW_PRESS) 
+        {
+            graph = createSceneGraph("auto_generated");
+            active_cell = nullptr;
+        }
+        else if (glfwGetKey( window, GLFW_KEY_2) == GLFW_PRESS)
+        {
+            graph = createSceneGraph("auto_generated3");
+            active_cell = nullptr;
+        }
 
         /** Set left viewport **/
         glEnable(GL_SCISSOR_TEST);
@@ -603,6 +638,11 @@ int main( void )
 
            useProgram("portal_overview", portalProgramID);
            drawPortals(outVisitedCells, portalProgramID);
+
+           glm::vec3 cameraPosition = computeMatricesFromInputs();
+           cube->translationVector = glm::vec3(cameraPosition.x, 0, cameraPosition.z);
+           useProgram("cube", cellProgramID);
+           drawObject(cube, cellProgramID);
         }
 
         glDisable(GL_BLEND);

@@ -19,8 +19,9 @@
 
 static unsigned int id = 0;
 
-template bool loadOBJ<Cell_T>(const char * path, Cell_T * object);
-template bool loadOBJ<Portal_T>(const char * path, Portal_T * object);
+template bool loadOBJ<Cell_T>(const char* path, Cell_T* object);
+template bool loadOBJ<Portal_T>(const char* path, Portal_T* object);
+template bool loadOBJ<Cube_T>(const char* path, Cube_T* object);
 
 template<typename T>
 bool loadOBJ(const char * path, T * object) {

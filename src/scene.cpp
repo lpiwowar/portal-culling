@@ -32,6 +32,14 @@ void fillObjectBuffers(T * object) {
     return;
 }
 
+Cube_T* getCube()
+{
+    Cube_T* cube = new Cube_T;
+    loadOBJ(SOURCE_DIR "/res/cube.obj", cube);
+    fillObjectBuffers(cube);
+
+    return cube;
+}
 
 void makeEdge(Cell_T* leftCell, Portal_T* portal, Cell_T* rightCell) 
 {
@@ -68,8 +76,6 @@ void calcBoundingBox(T* object) {
 
     object->boundingBoxMin = min;
     object->boundingBoxMax = max;
-    // object->boundingBoxMax -= glm::vec3(0.1,0.1,0.1);
-    // object->boundingBoxMin += glm::vec3(0.1,0.1,0.1);
     object->boundingBoxMin.y -= 100;
     object->boundingBoxMax.y += 100;
 
@@ -231,112 +237,100 @@ void getSceneSubblock(Graph_T* graph,
 
 Graph_T *createSceneGraph(std::string sceneName) 
 {
-    if (sceneName == "auto_generated") 
+    assert(sceneName == "auto_generated" ||
+           sceneName == "auto_generated3");
+
+    std::string modelDir;
+    if (sceneName == "auto_generated")
+        modelDir = SOURCE_DIR "/res/scenes/auto_generated2/";
+    else if (sceneName == "auto_generated3")
+        modelDir = SOURCE_DIR "/res/scenes/auto_generated3/";
+
+    CellMap_T cells;
+    PortalMap_T portals;
+
+    Cell_T* cell_1 = getNewCell();
+    cell_1->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "room1.obj").c_str(), cell_1);
+    cells.insert(CellMapElem_T("cell_1", cell_1));
+    calcBoundingBox(cell_1);
+    fillObjectBuffers(cell_1);
+
+    Cell_T* cell_2 = getNewCell();
+    cell_2->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "room2.obj").c_str(), cell_2);
+    cells.insert(CellMapElem_T("cell_2", cell_2));
+    calcBoundingBox(cell_2);
+    fillObjectBuffers(cell_2);
+
+    Cell_T* cell_3 = getNewCell();
+    cell_3->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "room3.obj").c_str(), cell_3);
+    cells.insert(CellMapElem_T("cell_3", cell_3));
+    calcBoundingBox(cell_3);
+    fillObjectBuffers(cell_3);
+
+    Cell_T* cell_4 = getNewCell();
+    cell_4->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "room4.obj").c_str(), cell_4);
+    cells.insert(CellMapElem_T("cell_4", cell_4));
+    calcBoundingBox(cell_4);
+    fillObjectBuffers(cell_4);
+
+    Portal_T* portal_1 = getNewPortal();
+    portal_1->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "portal1.obj").c_str(), portal_1);
+    portals.insert(PortalMapElem_T("portal_1", portal_1));
+    calcBoundingBox(portal_1);
+    fillObjectBuffers(portal_1);
+
+    Portal_T* portal_2 = getNewPortal();
+    portal_2->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "portal2.obj").c_str(), portal_2);
+    portals.insert(PortalMapElem_T("portal_2", portal_2));
+    calcBoundingBox(portal_2);
+    fillObjectBuffers(portal_2);
+
+    Portal_T* portal_3 = getNewPortal();
+    portal_3->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "portal3.obj").c_str(), portal_3);
+    portals.insert(PortalMapElem_T("portal_3", portal_3));
+    calcBoundingBox(portal_3);
+    fillObjectBuffers(portal_3);
+
+    Portal_T* portal_4 = getNewPortal();
+    portal_4->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "portal4.obj").c_str(), portal_4);
+    portals.insert(PortalMapElem_T("portal_4", portal_4));
+    calcBoundingBox(portal_4);
+    fillObjectBuffers(portal_4);
+
+    Portal_T* portal_5 = getNewPortal();
+    portal_5->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "portal5.obj").c_str(), portal_5);
+    portals.insert(PortalMapElem_T("portal_5", portal_5));
+    calcBoundingBox(portal_5);
+    fillObjectBuffers(portal_5);
+
+    Portal_T* portal_8 = getNewPortal();
+    portal_8->translationVector = glm::vec3(0,0,0);
+    loadOBJ((modelDir + "portal8.obj").c_str(), portal_8);
+    portals.insert(PortalMapElem_T("portal_8", portal_8));
+    calcBoundingBox(portal_8);
+    fillObjectBuffers(portal_8);
+
+    Graph_T* graph = new Graph_T;
+    connectPortals_T connectPortals;
+    for(int i = 0; i < 6000; i++) 
     {
-        CellMap_T cells;
-        PortalMap_T portals;
-
-        Cell_T* cell_1 = getNewCell();
-        cell_1->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/room1.obj", cell_1);
-        cells.insert(CellMapElem_T("cell_1", cell_1));
-        calcBoundingBox(cell_1);
-        fillObjectBuffers(cell_1);
-
-        Cell_T* cell_2 = getNewCell();
-        cell_2->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/room2.obj", cell_2);
-        cells.insert(CellMapElem_T("cell_2", cell_2));
-        calcBoundingBox(cell_2);
-        fillObjectBuffers(cell_2);
-
-        Cell_T* cell_3 = getNewCell();
-        cell_3->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/room3.obj", cell_3);
-        cells.insert(CellMapElem_T("cell_3", cell_3));
-        calcBoundingBox(cell_3);
-        fillObjectBuffers(cell_3);
-
-        Cell_T* cell_4 = getNewCell();
-        cell_4->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/room4.obj", cell_4);
-        cells.insert(CellMapElem_T("cell_4", cell_4));
-        calcBoundingBox(cell_4);
-        fillObjectBuffers(cell_4);
-
-        Portal_T* portal_1 = getNewPortal();
-        portal_1->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/portal1.obj", portal_1);
-        portals.insert(PortalMapElem_T("portal_1", portal_1));
-        calcBoundingBox(portal_1);
-        fillObjectBuffers(portal_1);
-
-        Portal_T* portal_2 = getNewPortal();
-        portal_2->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/portal2.obj", portal_2);
-        portals.insert(PortalMapElem_T("portal_2", portal_2));
-        calcBoundingBox(portal_2);
-        fillObjectBuffers(portal_2);
-
-        Portal_T* portal_3 = getNewPortal();
-        portal_3->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/portal3.obj", portal_3);
-        portals.insert(PortalMapElem_T("portal_3", portal_3));
-        calcBoundingBox(portal_3);
-        fillObjectBuffers(portal_3);
-
-        Portal_T* portal_4 = getNewPortal();
-        portal_4->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/portal4.obj", portal_4);
-        portals.insert(PortalMapElem_T("portal_4", portal_4));
-        calcBoundingBox(portal_4);
-        fillObjectBuffers(portal_4);
-
-        Portal_T* portal_5 = getNewPortal();
-        portal_5->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/portal5.obj", portal_5);
-        portals.insert(PortalMapElem_T("portal_5", portal_5));
-        calcBoundingBox(portal_5);
-        fillObjectBuffers(portal_5);
-
-/*
-        Portal_T* portal_6 = getNewPortal();
-        portal_6->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/portal6.obj", portal_6);
-        portals.insert(PortalMapElem_T("portal_6", portal_6));
-        calcBoundingBox(portal_6);
-        fillObjectBuffers(portal_6);
-*/
-/*
-        Portal_T* portal_7 = getNewPortal();
-        portal_7->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/portal7.obj", portal_7);
-        portals.insert(PortalMapElem_T("portal_7", portal_7));
-        calcBoundingBox(portal_7);
-        fillObjectBuffers(portal_7);
-*/
-        Portal_T* portal_8 = getNewPortal();
-        portal_8->translationVector = glm::vec3(0,0,0);
-        loadOBJ(SOURCE_DIR "/res/scenes/auto_generated2/portal8.obj", portal_8);
-        portals.insert(PortalMapElem_T("portal_8", portal_8));
-        calcBoundingBox(portal_8);
-        fillObjectBuffers(portal_8);
-
-        Graph_T* graph = new Graph_T;
-        connectPortals_T connectPortals;
-        for(int i = 0; i < 6000; i++) 
-        {
-            getSceneSubblock(graph, 
-                             glm::vec3(0,0,37*i), 
-                             &connectPortals,
-                             cells,
-                             portals);
-        }
-
-        return graph;
+        getSceneSubblock(graph, 
+                            glm::vec3(0,0,37*i), 
+                            &connectPortals,
+                            cells,
+                            portals);
     }
 
-    return nullptr;
+    return graph;
 }
 
 

@@ -25,6 +25,7 @@ using namespace glm;
 typedef struct Cell_T Cell_T;
 typedef struct Portal_T Portal_T;
 typedef struct Graph_T Graph_T;
+typedef struct Cube_T Cube_T;
 
 typedef std::pair<std::string, Cell_T*> CellMapElem_T;
 typedef std::map<std::string, Cell_T*> CellMap_T;
@@ -83,6 +84,20 @@ struct Portal_T {
 	glm::vec3 translationVector = glm::vec3(0,0,0);     /** < Position of the cell in the space */
 };
 
+struct Cube_T {
+    unsigned int id;                 /** < Unique identifier of the cube.     */
+
+	std::vector<glm::vec3>* vertices; /** < Vertices of the object.           */
+	std::vector<glm::vec2>* uvs;      /** < UV coordinates.                   */
+	std::vector<glm::vec3>* normals;  /** < Normals of the vertices.          */
+
+	GLuint vertexBuffer;             /** < ID of vertex buffer.              */
+	GLuint uvBuffer;                 /** < ID of buffer with UV coordinates. */
+	GLuint normalBuffer;             /** < ID of buffer with normals.        */
+
+	glm::vec3 translationVector = glm::vec3(0,0,0);     /** < Position of the cell in the space */
+};
+
 /**
  * @brief Represents scene graph in the portal occlussion culling.
  */
@@ -107,4 +122,5 @@ Graph_T *createSceneGraph(std::string sceneName);
  */
 void destroySceneGraph(Graph_T *graph);
 
+Cube_T* getCube();
 #endif

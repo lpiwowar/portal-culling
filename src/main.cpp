@@ -249,7 +249,7 @@ bool portalIsVisible(Portal_T *portal, GLuint portalProgramID)
 {
 
     glDepthMask(GL_FALSE);  
-    glDisable(GL_CULL_FACE);  
+    // glDisable(GL_CULL_FACE);  
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -265,7 +265,7 @@ bool portalIsVisible(Portal_T *portal, GLuint portalProgramID)
     glEndQuery(GL_ANY_SAMPLES_PASSED);
     glGetQueryObjectiv(queryID, GL_QUERY_RESULT, &anyFragRendered);
 
-    glEnable(GL_CULL_FACE);  
+    // glEnable(GL_CULL_FACE);  
     glDisable(GL_BLEND);
 
     glDepthMask(GL_TRUE);  
@@ -381,7 +381,7 @@ void drawNeighboringCells(Cell_T& cell,
 void drawPortals(std::vector<Cell_T*> cells, GLuint portalProgramID)
 {
     useProgram("portals", portalProgramID);
-    glDisable(GL_CULL_FACE);
+    // glDisable(GL_CULL_FACE);
     for(const auto& cell: cells)
     {
         for(const auto& portal: cell->portals)
@@ -389,7 +389,33 @@ void drawPortals(std::vector<Cell_T*> cells, GLuint portalProgramID)
             drawObject(portal, portalProgramID);
         }
     }
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
+}
+
+Cell_T* getActiveCell(Cell_T* activeCell, Graph_T* graph)
+{
+    assert(graph != nullptr);
+    static int i = 0;
+    if(!activeCell)
+        return getCurrentCell(graph);
+
+    glm::vec3 cameraPosition = computeMatricesFromInputs();
+    if(isInsideObject(cameraPosition, activeCell))
+        return activeCell;
+
+    for(const auto& portal: activeCell->portals)
+    {
+        Cell_T* neighboringCell;
+        if(portal->leftCell->id == activeCell->id) 
+            neighboringCell = portal->rightCell;
+        else
+            neighboringCell = portal->leftCell;
+
+        if(isInsideObject(cameraPosition, neighboringCell))
+            return neighboringCell;
+    }
+    
+    return getCurrentCell(graph);
 }
 
 int main( void )
@@ -450,7 +476,7 @@ int main( void )
 	glDepthFunc(GL_LESS); 
 
 	/** Cull triangles which normal is not towards the camera. */
-	glEnable(GL_CULL_FACE);
+	// glEnable(GL_CULL_FACE);
 
 	GLuint vertexarrayid;
 	glGenVertexArrays(1, &vertexarrayid);
@@ -465,6 +491,7 @@ int main( void )
 
 
     initText2D(SOURCE_DIR "/res/textures/Holstein.DDS");
+    Cell_T *active_cell = nullptr;
     bool portalCullingMode = true;
     double lastTime = glfwGetTime();
     int nbFrames = 0;
@@ -502,8 +529,8 @@ int main( void )
         glBeginQuery(GL_PRIMITIVES_GENERATED, NumPrimitivesQueryID);
 
 
-        Cell_T *active_cell = NULL;
-        active_cell = getCurrentCell(graph);
+        // active_cell = getCurrentCell(graph);
+        active_cell = getActiveCell(active_cell, graph);
         std::vector<unsigned int> visitedCells; 
 
         if (!active_cell || !portalCullingMode) 

@@ -68,6 +68,8 @@ void calcBoundingBox(T* object) {
 
     object->boundingBoxMin = min;
     object->boundingBoxMax = max;
+    // object->boundingBoxMax -= glm::vec3(0.1,0.1,0.1);
+    // object->boundingBoxMin += glm::vec3(0.1,0.1,0.1);
     object->boundingBoxMin.y -= 100;
     object->boundingBoxMax.y += 100;
 

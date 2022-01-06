@@ -13,6 +13,8 @@ chmod u+x build.sh
 
 Used resources
 --------------
+- Code from OpenGL tutorial
+  [[here](http://www.opengl-tutorial.org/)]
 - Video explenation of Portal Occlusion Culling algorithm 
   [[here](https://www.youtube.com/watch?v=8xgb-ZcZV9s)]
 - Original paper describing the algorithm

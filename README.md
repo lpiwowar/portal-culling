@@ -1,23 +1,29 @@
-Portal Occlusion Culling
-========================
-This repository contains implementation of application that demonstrates
-the working of Portal Occlussion Culling algorithm.
+PGR - Portal Occlusion Culling
+==============================
+This folder contains implementation of Portal Occlusion Culling algorithm. 
+To run the program (portal_culling) it is necessary to first build the program 
+using the **build.sh** script. 
 
-Instalation 
------------
-To install the program run the following command:
-```
-chmod u+x build.sh
-./build.sh
-```
+Project structure
+-----------------
+- *external* - Contains external libraries used in the project.
+- *include*  - Contains header files used in the projec.
+- *doc*      - Contains documentation (written in Czech).
+- *res*      - Resources used by the project (models of scenes).
+- *shaders*  - Vertex and fragment shaders.
+- *src*      - .cpp files 
 
-Used resources
---------------
-- Code from OpenGL tutorial
-  [[here](http://www.opengl-tutorial.org/)]
-- Video explenation of Portal Occlusion Culling algorithm 
-  [[here](https://www.youtube.com/watch?v=8xgb-ZcZV9s)]
-- Original paper describing the algorithm
-  [[here](https://doi.org/10.1093/comjnl/14.3.232)]
-- Paper describing implementation of the algorithm using AABB
-  [[here](https://dl.acm.org/doi/10.1145/199404.199422)]
+```
+├── build.sh
+├── external
+├── include
+├── PGR-doc-xpiwow00.pdf
+├── README.md
+├── res
+│   ├── scenes
+│   └── textures
+├── shaders
+│   ├── fragmentShaders
+│   └── vertexShaders
+└── src
+```

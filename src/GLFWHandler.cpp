@@ -1,0 +1,4 @@
+class GLFWHandler {
+    public:
+        
+}

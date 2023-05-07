@@ -4,6 +4,12 @@ This folder contains implementation of Portal Occlusion Culling algorithm.
 To run the program (portal_culling) it is necessary to first build the program 
 using the **build.sh** script. 
 
+Video 🎞️
+--------
+<p align="center">
+<a href="https://youtu.be/bFuk_A-g4Hs"><img src="http://img.youtube.com/vi/bFuk_A-g4Hs/0.jpg"></a>
+</p>
+
 How to controll the program:
 ----------------------------
 - To move throughout the model use **W**,**A**,**S**,**D** keys and mouse.

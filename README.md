@@ -7,7 +7,7 @@ using the **build.sh** script.
 Video 🎞️
 --------
 <p align="center">
-<a href="https://youtu.be/bFuk_A-g4Hs"><img src="http://img.youtube.com/vi/bFuk_A-g4Hs/0.jpg"></a>
+<a href="https://youtu.be/If-p-xdak-o"><img src="http://img.youtube.com/vi/If-p-xdak-o/0.jpg"></a>
 </p>
 
 How to controll the program:
